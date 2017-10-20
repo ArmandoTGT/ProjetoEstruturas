@@ -19,7 +19,12 @@ public class MyScreen implements Screen{
 	private OrthographicCamera camera;
 	private Viewport port;
 	private Texture[] quads;
-	
+	private Hud hud;
+	private Texture fundo;
+	private int elementos; //Total de elementos que serão mostrados na tela
+	public static ListaSeqGen lista_seq; 
+	public static boolean baux;
+
 	//private Texture[] setas;
 	
 	public MyScreen(Executor game){
@@ -27,13 +32,17 @@ public class MyScreen implements Screen{
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
-		
-		
+		hud = new Hud(game.balde);
+		fundo = new Texture("coisa/FundoEstruturas.png");
+		elementos = 0;
+		baux = false;
 		//setas = new Texture[50];
 		quads = new Texture[20];
 		for(int i = 0; i < 20; i++) {
 			quads[i] = new Texture("coisa/quadradoVazio.png");
 		}
+
+
 		/*for(int i = 0; i < 50; i++) {
 			setas[i] = new Texture("coisa/seta.png");
 		}*/
@@ -49,15 +58,17 @@ public class MyScreen implements Screen{
 	
 	public void render(float delta) {
 		moveCamera(delta);
-		
-		
+				
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		
 		game.balde.begin();
-		for(int i = 0; i < 20; i++) {
+		if(baux) {
+			elementos = lista_seq.memoria();
+		}
+		for(int i = 0; i < elementos; i++) {
 			game.balde.draw(quads[i], -640 + 129 * i, 0);
 			
 		}
@@ -66,6 +77,8 @@ public class MyScreen implements Screen{
 		}*/
 		
 		game.balde.end();
+		hud.stage.act(delta);
+		hud.stage.draw();
 		
 		
 	}
@@ -81,25 +94,25 @@ public class MyScreen implements Screen{
 
 	private void setmoveCamera(float dt) {
 		
-		if(Gdx.input.isTouched()){
+		/*if(Gdx.input.isTouched()){
 			
 			System.out.println(" " + Gdx.input.getX());
 			camera.position.x = -Gdx.input.getX() +  (-640 + 129 * (19/2) + 382);
 			camera.position.y = Gdx.input.getY() - 300;
-			}
+			}*/
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
-			camera.position.x -= 500 * dt;
+			camera.position.x -= 1000 * dt;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
-			camera.position.x += 500 * dt;
+			camera.position.x += 1000 * dt;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.UP) ){
-			camera.position.y += 500 * dt;
+			camera.position.y += 1000 * dt;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.DOWN) ){
-			camera.position.y -= 500 * dt;
+			camera.position.y -= 1000 * dt;
 		}
 		
 	}
