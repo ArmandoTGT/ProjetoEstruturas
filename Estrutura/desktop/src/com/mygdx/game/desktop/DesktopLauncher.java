@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		cfg.title = "RPG";
 		cfg.width = 1280;
 		cfg.height = 720;
-		cfg.useGL30 = true;
+		cfg.useGL30 = false;
 		cfg.resizable = false;
 		
 		new LwjglApplication(new Executor(), cfg);

@@ -56,6 +56,7 @@ public class MenuScreen implements Screen, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
+					Gdx.input.getTextInput(MenuScreen.this, "Sequencial", "", "Tamanho da estrutura");
 					game.setScreen(new MyScreen(game));
 				}
 		    	
@@ -110,13 +111,12 @@ public class MenuScreen implements Screen, TextInputListener{
 
 	@Override
 	public void input(String text) {
-		// TODO Auto-generated method stub
-		
+		//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
+		MyScreen.lista_seq = new ListaSeqGen<Object>(Integer.parseInt(text));
 	}
 
 	@Override
 	public void canceled() {
-		// TODO Auto-generated method stub
 		
 	}
 	

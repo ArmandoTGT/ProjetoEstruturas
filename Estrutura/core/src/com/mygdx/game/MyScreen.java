@@ -65,12 +65,11 @@ public class MyScreen implements Screen{
 		game.balde.setProjectionMatrix(camera.combined);
 		
 		game.balde.begin();
-		if(baux) {
+		if(lista_seq != null) {
 			elementos = lista_seq.memoria();
 		}
 		for(int i = 0; i < elementos; i++) {
 			game.balde.draw(quads[i], -640 + 129 * i, 0);
-			
 		}
 		/*for(int i = 0; i < 50; i++) {			
 			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
