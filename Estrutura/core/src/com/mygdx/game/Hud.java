@@ -22,14 +22,13 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Hud implements Disposable, TextInputListener{
-	int i, pos; //Nos ajudará na lógica de adicionar e remover
-	
 	public Stage stage;
 	private Viewport port;
 	
 	private Integer worldTimer;
 	private float timeCount;
 	private Integer score;
+	
 	//Label countdownLabel;
 	//Label scoreLabel;
 	//Label timeLabel;
@@ -50,8 +49,8 @@ public class Hud implements Disposable, TextInputListener{
     TextureAtlas buttonAtlas2;
     
 	
-	public Hud(SpriteBatch sb) {
-		i = 0;
+	public Hud(SpriteBatch sb) {		
+		
 		
 		worldTimer = 300;
 		timeCount = 0;
@@ -78,14 +77,7 @@ public class Hud implements Disposable, TextInputListener{
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				//Adicionará o tamanho da estrutura
-				Gdx.input.getTextInput(Hud.this, "Adicionar", "", "Posição");
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Gdx.input.getTextInput(Hud.this, "Adicionar", "", "Conteudo");
+				Gdx.input.getTextInput(Hud.this, "Sequencial", "", "Tamanho da estrutura");
 			}
 	    	
 	     });
@@ -131,14 +123,10 @@ public class Hud implements Disposable, TextInputListener{
 	 */
 	@Override
 	public void input(String text) {
-		if(i == 0) { //A primeira vez que é chamada a função é para definir a posicao
-			pos = Integer.parseInt(text);
-			i++; 
-		}if(i == 1) {//A segunda vez que mandar um resultado será com o conteudo
-			MyScreen.lista_seq.insere(pos, text);
-			i=0;//Reiniciar a contagem
-		}
+		MyScreen.lista_seq = new ListaSeqGen<Object>(Integer.parseInt(text));	
+		MyScreen.baux = true;
 	}
+
 
 	@Override
 	public void canceled() {

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -19,14 +20,46 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MenuScreen implements Screen, TextInputListener{
+public class MenuScreen implements Screen{
 	
 	private Executor game;
-	TextButton button;
-    TextButtonStyle textButtonStyle;
-    BitmapFont font;
-    Skin skin;
-    TextureAtlas buttonAtlas;
+	
+	
+    TextButtonStyle textButtonStyleSair;
+    BitmapFont fontSair;
+    Skin skinSair;
+    TextureAtlas buttonAtlasSair;
+    
+    
+    TextButtonStyle textButtonStyleLseq;
+    BitmapFont fontLseq;
+    Skin skinLseq;
+    TextureAtlas buttonAtlasLseq;
+   
+    
+    TextButtonStyle textButtonStyleLSE;
+    BitmapFont fontLSE;
+    Skin skinLSE;
+    TextureAtlas buttonAtlasLSE;
+    
+    
+    TextButtonStyle textButtonStyleLDE;
+    BitmapFont fontLDE;
+    Skin skinLDE;
+    TextureAtlas buttonAtlasLDE;
+    
+    
+    TextButtonStyle textButtonStylePilha;
+    BitmapFont fontPilha;
+    Skin skinPilha;
+    TextureAtlas buttonAtlasPilha;
+    
+    
+    TextButtonStyle textButtonStyleFila;
+    BitmapFont fontFila;
+    Skin skinFila;
+    TextureAtlas buttonAtlasFila;
+
     private Texture fundo;
     
     
@@ -40,29 +73,42 @@ public class MenuScreen implements Screen, TextInputListener{
     	stage = new Stage(port);
     	fundo = new Texture("coisa/FundoMenu.png");
     	
-    	//linhas botões
-		 font = new BitmapFont();
-	     skin = new Skin();
-	     buttonAtlas = new TextureAtlas("coisa/botões.pack");
-	     skin.addRegions(buttonAtlas);
-	     textButtonStyle = new TextButtonStyle();
-	     textButtonStyle.font = font;
-	     textButtonStyle.up = skin.getDrawable("normal");
-	     textButtonStyle.down = skin.getDrawable("apertado");
-	     textButtonStyle.checked = skin.getDrawable("normal");
-	     Button button = new TextButton(" ", textButtonStyle);
-	     button.addListener(new ClickListener() {
-	    	 	
+    	//Begin Botão Sair
+		 fontSair = new BitmapFont();
+	     skinSair = new Skin();
+	     buttonAtlasSair = new TextureAtlas("botões/SairImg.pack");
+	     skinSair.addRegions(buttonAtlasSair);
+	     textButtonStyleSair = new TextButtonStyle();
+	     textButtonStyleSair.font = fontSair;
+	     textButtonStyleSair.up = skinSair.getDrawable("SairNormal");
+	     textButtonStyleSair.down = skinSair.getDrawable("SairPressionado");
+	     textButtonStyleSair.checked = skinSair.getDrawable("SairNormal");
+	     Button button = new TextButton(" ", textButtonStyleSair);
+	     button.addListener(new ClickListener() {	    	 
 				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					super.clicked(event, x, y);
-					Gdx.input.getTextInput(MenuScreen.this, "Sequencial", "", "Tamanho da estrutura");
-					game.setScreen(new MyScreen(game));
-				}
-		    	
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				textButtonStyleSair.up = skinSair.getDrawable("SairNormal");
+				super.exit(event, x, y, pointer, toActor);
+			}
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				textButtonStyleSair.up = skinSair.getDrawable("SairSelecionado");
+				return super.mouseMoved(event, x, y);
+			}
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				/*
+				 * Através desse método quando apertamos o botão,
+				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
+				 */
+				game.setScreen(new FilaScreen(game));
+			}		    	
 		     });
 	     button.setPosition(640, 370);
-		  stage.addActor(button);
+		 stage.addActor(button);
+		//end Botão Sair
+
 		
 	}
 	
@@ -80,6 +126,7 @@ public class MenuScreen implements Screen, TextInputListener{
 		game.balde.draw(fundo, 0, 0);
 		game.balde.end();
 		
+		stage.act(delta);
 		stage.draw();
 		
 	}
@@ -106,17 +153,6 @@ public class MenuScreen implements Screen, TextInputListener{
 	
 	public void dispose() {
 		
-		
-	}
-
-	@Override
-	public void input(String text) {
-		//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
-		MyScreen.lista_seq = new ListaSeqGen<Object>(Integer.parseInt(text));
-	}
-
-	@Override
-	public void canceled() {
 		
 	}
 	

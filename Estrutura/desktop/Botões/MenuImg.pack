@@ -1,0 +1,26 @@
+
+MenuImg.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+MenuNormal
+  rotate: false
+  xy: 1, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1
+MenuPressionado
+  rotate: false
+  xy: 114, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1
+MenuSelecionado
+  rotate: false
+  xy: 227, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1

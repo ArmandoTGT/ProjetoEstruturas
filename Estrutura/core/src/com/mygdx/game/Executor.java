@@ -16,7 +16,7 @@ public class Executor extends Game {
 	public SpriteBatch balde;
 	
 	public MenuScreen MenuScreen;
-	public MyScreen MyScreen;
+	public ListSeqScreen MyScreen;
 	
 	
 	@Override
@@ -24,9 +24,8 @@ public class Executor extends Game {
 	
 		
 		balde = new SpriteBatch();
-		MenuScreen = new MenuScreen(this);
-		MyScreen = new MyScreen(this);
-		setScreen(MenuScreen);
+		
+		setScreen(new MenuScreen(this));
 		
 	}
 
