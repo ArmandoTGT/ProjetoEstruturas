@@ -83,8 +83,8 @@ public class MenuScreen implements Screen{
 	     textButtonStyleSair.up = skinSair.getDrawable("SairNormal");
 	     textButtonStyleSair.down = skinSair.getDrawable("SairPressionado");
 	     textButtonStyleSair.checked = skinSair.getDrawable("SairNormal");
-	     Button button = new TextButton(" ", textButtonStyleSair);
-	     button.addListener(new ClickListener() {	    	 
+	     Button buttonSair = new TextButton(" ", textButtonStyleSair);
+	     buttonSair.addListener(new ClickListener() {	    	 
 				@Override
 			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
 				textButtonStyleSair.up = skinSair.getDrawable("SairNormal");
@@ -102,13 +102,192 @@ public class MenuScreen implements Screen{
 				 * Através desse método quando apertamos o botão,
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */
+				System.out.println("Sair em construção");
+			}		    	
+		     });
+	     buttonSair.setPosition(430, 115);
+		 stage.addActor(buttonSair);
+		//end Botão Sair
+		 
+		//Begin Botão Lseq
+		 fontLseq = new BitmapFont();
+	     skinLseq = new Skin();
+	     buttonAtlasLseq = new TextureAtlas("botões/LseqImg.pack");
+	     skinLseq.addRegions(buttonAtlasLseq);
+	     textButtonStyleLseq = new TextButtonStyle();
+	     textButtonStyleLseq.font = fontLseq;
+	     textButtonStyleLseq.up = skinLseq.getDrawable("SequencialNormal");
+	     textButtonStyleLseq.down = skinLseq.getDrawable("SequencialPressionado");
+	     textButtonStyleLseq.checked = skinLseq.getDrawable("SequencialNormal");
+	     Button buttonLseq = new TextButton(" ", textButtonStyleLseq);
+	     buttonLseq.addListener(new ClickListener() {	    	 
+				@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				textButtonStyleLseq.up = skinLseq.getDrawable("SequencialNormal");
+				super.exit(event, x, y, pointer, toActor);
+			}
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				textButtonStyleLseq.up = skinLseq.getDrawable("SequencialSelecionado");
+				return super.mouseMoved(event, x, y);
+			}
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				/*
+				 * Através desse método quando apertamos o botão,
+				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
+				 */
+				game.setScreen(new ListaSeqScreen(game));
+			}		    	
+		     });
+	     buttonLseq.setPosition(432, 565);
+		 stage.addActor(buttonLseq);
+		//end Botão Lseq
+		 
+		//Begin Botão LSE
+		 fontLSE = new BitmapFont();
+	     skinLSE = new Skin();
+	     buttonAtlasLSE = new TextureAtlas("botões/LSEImg.pack");
+	     skinLSE.addRegions(buttonAtlasLSE);
+	     textButtonStyleLSE = new TextButtonStyle();
+	     textButtonStyleLSE.font = fontLSE;
+	     textButtonStyleLSE.up = skinLSE.getDrawable("LSENormal");
+	     textButtonStyleLSE.down = skinLSE.getDrawable("LSEPressionado");
+	     textButtonStyleLSE.checked = skinLSE.getDrawable("LSENormal");
+	     Button buttonLSE = new TextButton(" ", textButtonStyleLSE);
+	     buttonLSE.addListener(new ClickListener() {	    	 
+				@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				textButtonStyleLSE.up = skinLSE.getDrawable("LSENormal");
+				super.exit(event, x, y, pointer, toActor);
+			}
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				textButtonStyleLSE.up = skinLSE.getDrawable("LSESelecionado");
+				return super.mouseMoved(event, x, y);
+			}
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				/*
+				 * Através desse método quando apertamos o botão,
+				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
+				 */
+				System.out.println("LSE em construção");
+			}		    	
+		     });
+	     buttonLSE.setPosition(150, 415);
+		 stage.addActor(buttonLSE);
+		//end Botão LSE
+		 
+		//Begin Botão LDE
+		 fontLDE = new BitmapFont();
+	     skinLDE = new Skin();
+	     buttonAtlasLDE = new TextureAtlas("botões/LDEImg.pack");
+	     skinLDE.addRegions(buttonAtlasLDE);
+	     textButtonStyleLDE = new TextButtonStyle();
+	     textButtonStyleLDE.font = fontLDE;
+	     textButtonStyleLDE.up = skinLDE.getDrawable("LDENormal");
+	     textButtonStyleLDE.down = skinLDE.getDrawable("LDEPressionado");
+	     textButtonStyleLDE.checked = skinLDE.getDrawable("LDENormal");
+	     Button buttonLDE = new TextButton(" ", textButtonStyleLDE);
+	     buttonLDE.addListener(new ClickListener() {	    	 
+				@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				textButtonStyleLDE.up = skinLDE.getDrawable("LDENormal");
+				super.exit(event, x, y, pointer, toActor);
+			}
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				textButtonStyleLDE.up = skinLDE.getDrawable("LDESelecionado");
+				return super.mouseMoved(event, x, y);
+			}
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				/*
+				 * Através desse método quando apertamos o botão,
+				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
+				 */
+				System.out.println("LDE em construção");
+			}		    	
+		     });
+	     buttonLDE.setPosition(150, 265);
+		 stage.addActor(buttonLDE);
+		//end Botão LDE
+		 
+		//Begin Botão Pilha
+		 fontPilha = new BitmapFont();
+	     skinPilha = new Skin();
+	     buttonAtlasPilha = new TextureAtlas("botões/PilhaImg.pack");
+	     skinPilha.addRegions(buttonAtlasPilha);
+	     textButtonStylePilha = new TextButtonStyle();
+	     textButtonStylePilha.font = fontPilha;
+	     textButtonStylePilha.up = skinPilha.getDrawable("PilhaNormal");
+	     textButtonStylePilha.down = skinPilha.getDrawable("PilhaPressionado");
+	     textButtonStylePilha.checked = skinPilha.getDrawable("PilhaNormal");
+	     Button buttonPilha = new TextButton(" ", textButtonStylePilha);
+	     buttonPilha.addListener(new ClickListener() {	    	 
+				@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				textButtonStylePilha.up = skinPilha.getDrawable("PilhaNormal");
+				super.exit(event, x, y, pointer, toActor);
+			}
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				textButtonStylePilha.up = skinPilha.getDrawable("PilhaSelecionado");
+				return super.mouseMoved(event, x, y);
+			}
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				/*
+				 * Através desse método quando apertamos o botão,
+				 * vamos chamar uma nova tela, que nesse caso é a janela da pilha
+				 */
+				game.setScreen(new PilhaScreen(game));
+			}		    	
+		     });
+	     buttonPilha.setPosition(717, 265);
+		 stage.addActor(buttonPilha);
+		//end Botão Pilha
+		 
+		//Begin Botão Fila
+		 fontFila = new BitmapFont();
+	     skinFila = new Skin();
+	     buttonAtlasFila = new TextureAtlas("botões/FilaImg.pack");
+	     skinFila.addRegions(buttonAtlasFila);
+	     textButtonStyleFila = new TextButtonStyle();
+	     textButtonStyleFila.font = fontFila;
+	     textButtonStyleFila.up = skinFila.getDrawable("FilaNormal");
+	     textButtonStyleFila.down = skinFila.getDrawable("FilaPressionado");
+	     textButtonStyleFila.checked = skinFila.getDrawable("FilaNormal");
+	     Button buttonFila = new TextButton(" ", textButtonStyleFila);
+	     buttonFila.addListener(new ClickListener() {	    	 
+				@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				textButtonStyleFila.up = skinFila.getDrawable("FilaNormal");
+				super.exit(event, x, y, pointer, toActor);
+			}
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				textButtonStyleFila.up = skinFila.getDrawable("FilaSelecionado");
+				return super.mouseMoved(event, x, y);
+			}
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				/*
+				 * Através desse método quando apertamos o botão,
+				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
+				 */
 				game.setScreen(new FilaScreen(game));
 			}		    	
 		     });
-	     button.setPosition(640, 370);
-		 stage.addActor(button);
-		//end Botão Sair
-
+	     buttonFila.setPosition(715, 415);
+		 stage.addActor(buttonFila);
+		//end Botão Pilha
 		
 	}
 	

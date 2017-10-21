@@ -1,0 +1,26 @@
+
+LseqImg.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+SequencialNormal
+  rotate: false
+  xy: 1, 93
+  size: 415, 90
+  orig: 415, 90
+  offset: 0, 0
+  index: -1
+SequencialPressionado
+  rotate: false
+  xy: 1, 1
+  size: 415, 90
+  orig: 415, 90
+  offset: 0, 0
+  index: -1
+SequencialSelecionado
+  rotate: false
+  xy: 418, 93
+  size: 415, 90
+  orig: 415, 90
+  offset: 0, 0
+  index: -1

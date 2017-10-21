@@ -22,8 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class ListaSeqHud implements Disposable, TextInputListener{
-	int opcao, pos; //Nos ajudará na lógica de adicionar e remover
+public class PilhaHud implements Disposable, TextInputListener{
 	
 	public Stage stage;
 	private Viewport port;
@@ -47,8 +46,7 @@ public class ListaSeqHud implements Disposable, TextInputListener{
     TextureAtlas buttonAtlasMenu;
     
 	
-	public ListaSeqHud(SpriteBatch sb, final Executor game) {
-		opcao = 0;
+	public PilhaHud(SpriteBatch sb, final Executor game) {
 		
 		this.game = game;
 		
@@ -84,8 +82,7 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				//Adicionará o tamanho da estrutura
-				opcao = 0; //Permitirá adicionar
-				Gdx.input.getTextInput(ListaSeqHud.this, "Adicionar", "", "Posição-Conteudo");				
+				Gdx.input.getTextInput(PilhaHud.this, "Adicionar", "", "Conteudo");				
 				}	    	
 	     	});
 	     stage.addActor(buttonAdd);
@@ -114,8 +111,11 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					opcao = 1; //Permitirá excluir
-					Gdx.input.getTextInput(ListaSeqHud.this, "Remoção", "", "Posição");
+					/*
+					 * Aqui começa o evento da exclusão de uma posição
+					 * na pilha
+					 */
+					PilhaScreen.removeTela();
 				}    	 
 	     	});
 	     stage.addActor(buttonRemove);
@@ -168,16 +168,7 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 	 */
 	@Override
 	public void input(String text) {
-		int pos, valor;
-		if(opcao ==0) {
-			String entrada [] = text.split("-");
-			pos = Integer.parseInt(entrada[0]);
-			ListaSeqScreen.insereTela(pos, entrada[1]);
-		}
-		else if(opcao == 1) {
-			pos = Integer.parseInt(text);
-			ListaSeqScreen.removeTela(pos);
-		}
+		PilhaScreen.insereTela(text);
 	}
 
 	@Override

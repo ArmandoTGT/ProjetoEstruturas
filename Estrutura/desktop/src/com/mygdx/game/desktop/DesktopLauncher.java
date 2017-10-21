@@ -7,7 +7,7 @@ import com.mygdx.game.Executor;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "RPG";
+		cfg.title = "Estruturas";
 		cfg.width = 1280;
 		cfg.height = 720;
 		cfg.useGL30 = false;

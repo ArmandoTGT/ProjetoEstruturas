@@ -14,36 +14,32 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class FilaScreen implements Screen, TextInputListener{
+public class PilhaScreen implements Screen, TextInputListener{
 	
+	private static int posRabo;
 	private Executor game;
 	private OrthographicCamera camera;
 	private Viewport port;
-	private FilaHud hud;
+	private PilhaHud hud; // Interface de interação com o usuuário(hud) que fica encima da nossa screen
 	private Texture fundo;
 	private int elementos; //Total de elementos que serão mostrados na tela
-	private static int posRabo;
 	static Texture quadValido;
 	static Texture quadVazio;
-	static Texture cabeca;
-	static Texture rabo;
 
 	/*
 	 * Todos os textures precisam ser construidos
 	 * apenas, e somente apenas, no construtor
 	 */
-	public FilaScreen(Executor game){
+	public PilhaScreen(Executor game){
 		posRabo = 0;
 		quadValido = new Texture("coisa/quadradoPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
-		cabeca = new Texture("coisa/cabeca.png");
-		rabo = new Texture("coisa/rabo.png");
-		Gdx.input.getTextInput(this, "Fila Sequencial", "", "Tamanho da estrutura");
-		FilaSeq();
+		Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
+		PilhaSeq();
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
-		hud = new FilaHud(game.balde, game);
+		hud = new PilhaHud(game.balde, game);
 		fundo = new Texture("coisa/FundoEstruturas.png");
 		elementos = 0;
 		//setas = new Texture[50];
@@ -72,11 +68,15 @@ public class FilaScreen implements Screen, TextInputListener{
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		game.balde.draw(fundo, -640, -360);
-		game.balde.draw(cabeca, -640, 0);
-		for(int i = 1; i <= elementos; i++) {
-				game.balde.draw(image(i), -640 + 129 +( 128 * (i - 1)), 0); //----
+			
+			for(int i = 1; i <= elementos; i++) {
+				/*
+				 * Como é uma pilha, foi desenhado na vertical, estando inicialmente
+				 * três blocos longe do centro e para alinhas com os botões superiores,
+				 * alinhamos a posição horizontal em 64
+				 */
+				game.balde.draw(image(i), -64, -384 + 129 * (i - 1)); 
 			}
-		if(posRabo != 0) game.balde.draw(rabo, -640 + 129 + (128 * (posRabo - 1)), -129);
 		/*for(int i = 0; i < 50; i++) {			
 			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
 		}*/
@@ -161,100 +161,102 @@ public class FilaScreen implements Screen, TextInputListener{
 		
 	}
 	
-	public static void insereTela(String valor) {
-		insere(valor); //Inserimos na posição inicial um novo valor
+	/*
+	 * Os próximos dois métodos são responsáveis por imprimirem
+	 * na tela a posição que teve alguma alteração
+	 */
+	
+	public static void insereTela( String valor) {
+		push(valor);//Inserimos na posição inicial um novo valor
 		//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
 		quads[posRabo] = quadValido;
 		posRabo++;
 	}
 	
 	public static void removeTela() {
-		System.out.println(remove()); //Removemos o valor salvo na última posição
+		System.out.println(pop()); //Removemos o valor salvo na última posição
 		//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
 		posRabo--;
 		quads[posRabo] = quadVazio;
 	}
 	
 	//-------------------------------PILHA SEQUENCIAL-------------------------------------------------
-		private static String dados[];
-		private static int inicio;
-		private static int fim;
-		private static int nElementos;
-		private static int tamMax;
-		private static Texture[] quads;
-		
-		public static void FilaSeq() {
-			inicio = 0;
-			fim = -1;
-			nElementos = 0;
-			tamMax = 20;
-			dados =  new String[tamMax];
-			quads = new Texture[20];
+	
+	private static String dados[]; // Vetor que contÃ©m os dados da lista 
+	private static int topo; 
+	private static int tamMax;
+	private static Texture[] quads;
+
+    static void PilhaSeq(){
+    		tamMax = 20;
+    		dados = new String[tamMax];
+    		topo = -1;
+    		quads = new Texture[20];
 			for(int i = 0; i<20 ; i++) {
 	    		quads[i] = new Texture("coisa/quadradoVazio.png");
 	    	}
-		}
+    	}
 
-		/** Verifica se a Fila estÃ¡ vazia */
-		public static boolean vazia () {
-			if (nElementos == 0)
-				return true;
-			else
-				return false;
-		}
+    /** Verifica se a Pilha estÃ¡ vazia */
+    public static boolean vazia(){
+    		if (topo == -1)
+    			return true;
+    	   else 
+    	      return false;
+	}
+	
+    /**Verifica se a Pilha estÃ¡ cheia */
+    public static boolean cheia(){
+        if (topo == (tamMax-1))
+  		  return true;
+      else
+  		  return false;
+	}
+	
+    /**ObtÃ©m o tamanho da Pilha*/
+    public static int tamanho(){
+		return topo+1;
+	}
+    
+    /** Consulta o elemento do topo da Pilha.
+		Retorna -1 se a pilha estiver vazia, 
+		caso contrÃ¡rio retorna o valor que estÃ¡ no topo da pilha. */
+ 	public static String top () {
+      if (vazia()) 
+         return "null"; // pilha vazia
+ 	  
+      return dados[topo];
+ 	}
+     
+	 /** Insere um elemento no topo da pilha.
+	  Retorna false se a pilha estiver cheia. 
+	  Caso contrÃ¡rio retorna true */
+ 	public static boolean push (String valor) {
+ 		if (cheia()) 
+ 			return false;  // err: pilha cheia 
+ 		
+ 		topo++;
+ 		dados[topo] = valor; 
+ 		return true;
+	 }   
 
-		/**Verifica se a Fila estÃ¡ cheia */
-		public static boolean cheia () {
-			if (nElementos == tamMax)
-				return true;
-			else
-				return false;
-		}
-
-		/** ObtÃ©m o tamanho da Fila */
-		public static int tamanho() {
-			return nElementos;
-		}
-
-		/** Consulta o elemento do inÃ­cio da fila.
-		    Retorna -1 se a fila estiver vazia. */
-		public static String primeiro() {
-			if (vazia())
-				return "null"; // Erro: Fila vazia 
-			
-			return dados[inicio];
-		}
-
-		/**Insere um elemento no fim de uma fila
-	    Retorna false se a fila estiver cheia, true caso contrÃ¡rio. */
-		public static boolean insere(String valor) {
-			if (cheia()){
-				return false;
-			}
-		
-			fim = (fim + 1) % tamMax; // Circularidade 
-		    dados[fim] = valor;
-			nElementos++;
-			return true;
-		}
-
-		/**Remove o elemento do inÃ­cio da fila e retorna o valor removido.
-		    Retorna -1 se a fila estiver vazia.*/
-		public static String remove() {
-			if (vazia())
-				return "null";
-		
-			String res = primeiro();
-			inicio = (inicio + 1) % tamMax; //Circularidade 
-			nElementos--;
-			return res;
-		}
-		
-	    /*
-	     * O método foi implementado para trabalhar graficamente com essa classe
-	     * basicamente retorna o texture atualmente salvo na posição designada
-	     */
-	    public static Texture image(int pos) {
-	      	return quads[pos - 1];
-	    }
+	 /** Retira o elemento do topo da pilha.
+	  Retorna -1 se a pilha estiver vazia. */
+ 	public static String pop() {          
+ 		if (vazia()) 
+ 			return "null"; // Pilha vazia
+ 		
+ 		String valor = dados[topo]; 
+ 		topo--; 
+ 		return valor;
+ 	}
+ 	
+    /*
+     * O método foi implementado para trabalhar graficamente com essa classe
+     * basicamente retorna o texture atualmente salvo na posição designada
+     */
+    public static Texture image(int pos) {
+      	return quads[pos - 1];
+    }
+	
 }

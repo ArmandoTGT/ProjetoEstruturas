@@ -16,7 +16,7 @@ public class Executor extends Game {
 	public SpriteBatch balde;
 	
 	public MenuScreen MenuScreen;
-	public ListSeqScreen MyScreen;
+	public ListaSeqScreen MyScreen;
 	
 	
 	@Override
