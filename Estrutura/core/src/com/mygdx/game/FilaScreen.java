@@ -36,8 +36,8 @@ public class FilaScreen implements Screen, TextInputListener{
 		posRabo = 0;
 		quadValido = new Texture("coisa/quadradoPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
-		cabeca = new Texture("coisa/cabeca.png");
-		rabo = new Texture("coisa/rabo.png");
+		cabeca = new Texture("coisa/PonteiroInicio.png");
+		rabo = new Texture("coisa/PonteiroFim.png");
 		Gdx.input.getTextInput(this, "Fila Sequencial", "", "Tamanho da estrutura");
 		FilaSeq();
 		camera = new OrthographicCamera();
@@ -72,11 +72,11 @@ public class FilaScreen implements Screen, TextInputListener{
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		game.balde.draw(fundo, -640, -360);
-		game.balde.draw(cabeca, -640, 0);
+		game.balde.draw(cabeca, -640, 50);
 		for(int i = 1; i <= elementos; i++) {
-				game.balde.draw(image(i), -640 + 129 +( 128 * (i - 1)), 0); //----
+				game.balde.draw(image(i), -640 + 230 +( 128 * (i - 1)), 0); //----
 			}
-		if(posRabo != 0) game.balde.draw(rabo, -640 + 129 + (128 * (posRabo - 1)), -129);
+		if(posRabo != 0) game.balde.draw(rabo, -640 + 290 + (128 * (posRabo - 1)), -220);
 		/*for(int i = 0; i < 50; i++) {			
 			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
 		}*/
@@ -98,12 +98,12 @@ public class FilaScreen implements Screen, TextInputListener{
 
 	private void setmoveCamera(float dt) {
 		
-		/*if(Gdx.input.isTouched()){
-			
-			System.out.println(" " + Gdx.input.getX());
-			camera.position.x = -Gdx.input.getX() +  (-640 + 129 * (19/2) + 382);
-			camera.position.y = Gdx.input.getY() - 300;
-			}*/
+		if (Gdx.input.isKeyPressed(Keys.A)) {
+			camera.zoom += 0.02;
+		}
+		if (Gdx.input.isKeyPressed(Keys.Q)) {
+			camera.zoom -= 0.02;
+		}
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {

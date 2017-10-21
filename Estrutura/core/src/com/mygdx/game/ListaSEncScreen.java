@@ -28,7 +28,9 @@ public class ListaSEncScreen implements Screen{
 	private static LSEGen lista;
 	static Texture quadValido;
 	static Texture quadVazio;
-	static Texture setaDireita,setaCima,setaBaixo;
+	static Texture setaDireita;
+	static Texture cabeca;
+	private static int posRabo;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -36,25 +38,19 @@ public class ListaSEncScreen implements Screen{
 	 */
 	public ListaSEncScreen(Executor game){
 		posicao = new Random();
+		posRabo = 0;
 		posicaoAux = 0;
 		quadValido = new Texture("coisa/BlocoEncadeado.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
 		setaDireita = new Texture("coisa/setaDireita.png");
-		setaCima = new Texture("coisa/setaCima.png");
-		setaBaixo = new Texture("coisa/setaBaixo.png");
+		cabeca = new Texture("coisa/PonteiroCabeça.png");		
 		lista = new LSEGen(quadValido, quadVazio);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
 		hud = new ListaSEncHud(game.balde, game);
 		fundo = new Texture("coisa/FundoEstruturas.png");
-		//setas = new Texture[50];
-		//---instaciação dos quadrados deletado
-
-
-		/*for(int i = 0; i < 50; i++) {
-			setas[i] = new Texture("coisa/seta.png");
-		}*/
+	
 		
 	}
 
@@ -74,14 +70,12 @@ public class ListaSEncScreen implements Screen{
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		game.balde.draw(fundo, -640, -360);
-			
+		game.balde.draw(cabeca, -640, 50);	
+		
 			for(int i = 1; i <= lista.tamanho(); i++) {
-						game.balde.draw(lista.imagem(i), -640 +  320 * (i - 1), 0); //----
-						game.balde.draw(setaDireita, -640 + (128 * i) + (192 * (i -1)), -1);
+						game.balde.draw(lista.imagem(i), -640 + 229 + 320 * (i - 1), 0); //----
+						game.balde.draw(setaDireita, -640 + 229 + (128 * i) + (192 * (i -1)), 0);
 				}
-		/*for(int i = 0; i < 50; i++) {			
-			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
-		}*/
 		game.balde.end();
 		hud.stage.act(delta);
 		hud.stage.draw();
@@ -100,12 +94,12 @@ public class ListaSEncScreen implements Screen{
 
 	private void setmoveCamera(float dt) {
 		
-		/*if(Gdx.input.isTouched()){
-			
-			System.out.println(" " + Gdx.input.getX());
-			camera.position.x = -Gdx.input.getX() +  (-640 + 129 * (19/2) + 382);
-			camera.position.y = Gdx.input.getY() - 300;
-			}*/
+		if (Gdx.input.isKeyPressed(Keys.A)) {
+			camera.zoom += 0.02;
+		}
+		if (Gdx.input.isKeyPressed(Keys.Q)) {
+			camera.zoom -= 0.02;
+		}
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
@@ -158,11 +152,11 @@ public class ListaSEncScreen implements Screen{
 	 */
 	
 	public static void insereTela(int pos, String valor) {
-		System.out.println("printou no " + lista.insere(pos, valor));
+		System.out.println("printou no " + lista.insere(pos, valor));		
 	}
 	
 	public static void removeTela(int pos) {
-		System.out.println(lista.remove(pos));
+		System.out.println(lista.remove(pos));		
 	}
 	
 	

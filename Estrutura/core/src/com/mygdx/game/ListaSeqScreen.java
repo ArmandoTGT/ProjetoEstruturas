@@ -91,12 +91,12 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 
 	private void setmoveCamera(float dt) {
 		
-		/*if(Gdx.input.isTouched()){
-			
-			System.out.println(" " + Gdx.input.getX());
-			camera.position.x = -Gdx.input.getX() +  (-640 + 129 * (19/2) + 382);
-			camera.position.y = Gdx.input.getY() - 300;
-			}*/
+		if (Gdx.input.isKeyPressed(Keys.A)) {
+			camera.zoom += 0.02;
+		}
+		if (Gdx.input.isKeyPressed(Keys.Q)) {
+			camera.zoom -= 0.02;
+		}
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
