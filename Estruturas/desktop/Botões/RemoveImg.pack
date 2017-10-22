@@ -1,0 +1,26 @@
+
+RemoveImg.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+RemoverNormal
+  rotate: false
+  xy: 1, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1
+RemoverPressionado
+  rotate: false
+  xy: 114, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1
+RemoverSelecionado
+  rotate: false
+  xy: 227, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1

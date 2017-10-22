@@ -1,0 +1,26 @@
+
+LSEImg.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+LSENormal
+  rotate: false
+  xy: 1, 93
+  size: 415, 90
+  orig: 415, 90
+  offset: 0, 0
+  index: -1
+LSEPressionado
+  rotate: false
+  xy: 1, 1
+  size: 415, 90
+  orig: 415, 90
+  offset: 0, 0
+  index: -1
+LSESelecionado
+  rotate: false
+  xy: 418, 93
+  size: 415, 90
+  orig: 415, 90
+  offset: 0, 0
+  index: -1

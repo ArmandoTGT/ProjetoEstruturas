@@ -1,0 +1,19 @@
+
+botão.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+paused
+  rotate: false
+  xy: 1, 35
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+tilet1
+  rotate: false
+  xy: 1, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

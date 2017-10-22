@@ -1,0 +1,26 @@
+
+AddImg.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+AdicionarNormal
+  rotate: false
+  xy: 1, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1
+AdicionarPressionado
+  rotate: false
+  xy: 114, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1
+AdicionarSelecionado
+  rotate: false
+  xy: 227, 1
+  size: 111, 62
+  orig: 111, 62
+  offset: 0, 0
+  index: -1
