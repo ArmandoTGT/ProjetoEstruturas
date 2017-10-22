@@ -210,7 +210,7 @@ public class MenuScreen implements Screen{
 				 * Através desse método quando apertamos o botão,
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */
-				System.out.println("LDE em construção");
+				game.setScreen(new ListaDEncScreen(game));
 			}		    	
 		     });
 	     buttonLDE.setPosition(150, 265);

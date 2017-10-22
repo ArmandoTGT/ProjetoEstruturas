@@ -25,8 +25,6 @@ public class PilhaScreen implements Screen, TextInputListener{
 	private int elementos; //Total de elementos que serão mostrados na tela
 	static Texture quadValido;
 	static Texture quadVazio;
-	static Texture cabeca;
-	
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -36,7 +34,6 @@ public class PilhaScreen implements Screen, TextInputListener{
 		posRabo = 0;
 		quadValido = new Texture("coisa/quadradoPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
-		cabeca = new Texture("coisa/PonteiroTopo.png");
 		Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
 		PilhaSeq();
 		camera = new OrthographicCamera();
@@ -78,10 +75,11 @@ public class PilhaScreen implements Screen, TextInputListener{
 				 * três blocos longe do centro e para alinhas com os botões superiores,
 				 * alinhamos a posição horizontal em 64
 				 */
-				game.balde.draw(image(i), -64, -370 + 129 * (i - 1)); 
+				game.balde.draw(image(i), -64, -384 + 129 * (i - 1)); 
 			}
-			if(posRabo != 0) game.balde.draw(cabeca, -291, -320 + 129 * (posRabo - 1));
-		
+		/*for(int i = 0; i < 50; i++) {			
+			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
+		}*/
 		game.balde.end();
 		hud.stage.act(delta);
 		hud.stage.draw();
@@ -100,12 +98,12 @@ public class PilhaScreen implements Screen, TextInputListener{
 
 	private void setmoveCamera(float dt) {
 		
-		if (Gdx.input.isKeyPressed(Keys.A)) {
-			camera.zoom += 0.02;
-		}
-		if (Gdx.input.isKeyPressed(Keys.Q)) {
-			camera.zoom -= 0.02;
-		}
+		/*if(Gdx.input.isTouched()){
+			
+			System.out.println(" " + Gdx.input.getX());
+			camera.position.x = -Gdx.input.getX() +  (-640 + 129 * (19/2) + 382);
+			camera.position.y = Gdx.input.getY() - 300;
+			}*/
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
@@ -156,7 +154,6 @@ public class PilhaScreen implements Screen, TextInputListener{
 	public void input(String text) {
 		//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
 		elementos = Integer.parseInt(text);
-		
 	}
 
 	@Override

@@ -16,42 +16,39 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class ListaSEncScreen implements Screen{
+public class ListaDEncScreen implements Screen{
 	
 	private Executor game;
 	private static Random posicao; //Como java aloca onde na memória será salvo, o random representará essa aleatoriedade
 	private static int posicaoAux;
 	private OrthographicCamera camera;
 	private Viewport port;
-	private ListaSEncHud hud;
+	private ListaDEncHud hud;
 	private Texture fundo;
-	private static LSEGen lista;
+	private static LDEGen lista;
 	static Texture quadValido;
 	static Texture quadVazio;
-	static Texture setaDireita,setaCima,setaBaixo;
+	static Texture setaDireita,setaEsquerda;
 
 	/*
 	 * Todos os textures precisam ser construidos
 	 * apenas, e somente apenas, no construtor
 	 */
-	public ListaSEncScreen(Executor game){
+	public ListaDEncScreen(Executor game){
 		posicao = new Random();
 		posicaoAux = 0;
-		quadValido = new Texture("coisa/BlocoEncadeado.png");
+		quadValido = new Texture("coisa/BlocoDuplamenteEncadeado.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
-		setaDireita = new Texture("coisa/setaDireita.png");
-		setaCima = new Texture("coisa/setaCima.png");
-		setaBaixo = new Texture("coisa/setaBaixo.png");
-		lista = new LSEGen(quadValido, quadVazio);
+		setaDireita = new Texture("coisa/SetaDuplaDireita.png");
+		setaEsquerda = new Texture("coisa/SetaDuplaEsquerda.png");
+		lista = new LDEGen(quadValido, quadVazio);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
-		hud = new ListaSEncHud(game.balde, game);
+		hud = new ListaDEncHud(game.balde, game);
 		fundo = new Texture("coisa/FundoEstruturas.png");
 		//setas = new Texture[50];
 		//---instaciação dos quadrados deletado
-
-
 		/*for(int i = 0; i < 50; i++) {
 			setas[i] = new Texture("coisa/seta.png");
 		}*/
@@ -74,12 +71,24 @@ public class ListaSEncScreen implements Screen{
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		game.balde.draw(fundo, -640, -360);
-			
+		/*
+		 * Esse for fará uma seta após o bloco inicial, pois ele será a seta 
+		 * voltando e terá seu numero 1 vez a mais que o numero de blocos
+		 */
+		//A seta para a direita será colocada após o primeiro quadrado de tamanho 128 pixels 640 + 128 = 512
 			for(int i = 1; i <= lista.tamanho(); i++) {
 				game.balde.draw(lista.imagem(i), -640 +  320 * (i - 1), 0); //----
 				game.balde.draw(setaDireita, -512 + (320 * (i-1)), 0);
 			}
-		/*for(int i = 0; i < 50; i++) {			
+		/*
+		 * Esse for fará uma seta antes do bloco inicial, pois ele será a seta 
+		 * voltando e terá seu numero igual ao número de blocos
+		 */
+		//A seta para a esquerda segue a mesma lógica
+			for(int i = 0; i < lista.tamanho(); i++) {
+				game.balde.draw(setaEsquerda, -512 + (320 *(i -1)), 0); 
+			}
+		/*for(int i = 0; i < 50; i++) {		
 			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
 		}*/
 		game.balde.end();
@@ -158,11 +167,11 @@ public class ListaSEncScreen implements Screen{
 	 */
 	
 	public static void insereTela(int pos, String valor) {
-		System.out.println("printou no " + lista.insere(pos, valor));
+		System.out.println("printou no " + lista.insere(pos, valor)); //Pode lançar null ao tentar remover uma posição invalida
 	}
 	
 	public static void removeTela(int pos) {
-		System.out.println(lista.remove(pos));
+		System.out.println(lista.remove(pos)); //Pode lançar null o remove quando a posição é invalida
 	}
 	
 	
