@@ -7,10 +7,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -32,6 +37,7 @@ public class ListaDEncScreen implements Screen{
 	static Texture rabo;
 	static Texture setaDireita,setaEsquerda;
 	private static int posRabo;
+	static BitmapFont font;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -47,6 +53,14 @@ public class ListaDEncScreen implements Screen{
 		setaEsquerda = new Texture("coisa/SetaDuplaEsquerda.png");
 		cabeca = new Texture("coisa/PonteiroCabeça.png");
 		rabo = new Texture("coisa/PonteiroCauda.png");
+		FileHandle caminho = new FileHandle("coisa/font.ttf");
+		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
+		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		  parameter.size = 20;		  
+		  font = new BitmapFont();					 
+		  font = generator.generateFont(parameter);	
+		  font.setColor(Color.valueOf("646b6d"));		  
+		  generator.dispose();
 		lista = new LDEGen(quadValido, quadVazio);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
@@ -86,6 +100,7 @@ public class ListaDEncScreen implements Screen{
 			for(int i = 1; i <= lista.tamanho(); i++) {
 				game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
 				game.balde.draw(setaDireita, -512 + 120 + (320 * (i-1)), 0);
+				font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
 				
 			}
 			if(posRabo != 0) game.balde.draw(rabo, -640 + 160 + (320 * (posRabo - 1)), -195);

@@ -5,10 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -27,6 +32,10 @@ public class FilaScreen implements Screen, TextInputListener{
 	static Texture quadVazio;
 	static Texture cabeca;
 	static Texture rabo;
+	private static int posi[];
+	private static String[] conteudo;
+	 static BitmapFont font[];
+	 static String[] conteudoInvert;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -34,6 +43,21 @@ public class FilaScreen implements Screen, TextInputListener{
 	 */
 	public FilaScreen(Executor game){
 		posRabo = 0;
+		conteudo = new String[21];
+		posi = new int[21];
+		conteudoInvert = new String[21];
+		FileHandle caminho = new FileHandle("coisa/font.ttf");
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 20;
+		  
+		font = new BitmapFont[21];
+		for(int i = 0; i <= 20; i++) {
+			 
+		font[i] = generator.generateFont(parameter);
+		font[i].setColor(Color.valueOf("646b6d"));
+		  }
+		generator.dispose();
 		quadValido = new Texture("coisa/quadradoPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
 		cabeca = new Texture("coisa/PonteiroInicio.png");
@@ -46,13 +70,7 @@ public class FilaScreen implements Screen, TextInputListener{
 		hud = new FilaHud(game.balde, game);
 		fundo = new Texture("coisa/FundoEstruturas.png");
 		elementos = 0;
-		//setas = new Texture[50];
-		//---instaciação dos quadrados deletado
-
-
-		/*for(int i = 0; i < 50; i++) {
-			setas[i] = new Texture("coisa/seta.png");
-		}*/
+		
 		
 	}
 
@@ -76,7 +94,19 @@ public class FilaScreen implements Screen, TextInputListener{
 		for(int i = 1; i <= elementos; i++) {
 				game.balde.draw(image(i), -640 + 105 +( 128 * (i - 1)), 0); //----
 			}
-		if(posRabo != 0) game.balde.draw(rabo, -640 + 147 + (128 * (posRabo - 1)), -184);
+		if(posRabo != 0) { 
+			game.balde.draw(rabo, -640 + 147 + (128 * (posRabo - 1)), -184);
+			for(int i = 0; i <= 20; i++) {
+				try {
+									
+			font[posi[i]].draw(game.balde, conteudoInvert[i -1], -640 + 45 + 129 * (posi[i]),	70);
+			
+			}
+			catch (Exception e) {
+			
+			}
+			}
+		}
 		/*for(int i = 0; i < 50; i++) {			
 			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
 		}*/
@@ -166,14 +196,35 @@ public class FilaScreen implements Screen, TextInputListener{
 		//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
 		quads[posRabo] = quadValido;
 		posRabo++;
-	}
+		
+		posi[posRabo] = posRabo;
+		String[] aux1 = new String[21];
+		
+		conteudo[posRabo] = valor;
+		aux1 = conteudo;
+		for(int i = 0; i <= posRabo; i++) {
+			conteudoInvert[posRabo -i] = aux1[i];
+			
+			
+			}
+		}
 	
 	public static void removeTela() {
 		System.out.println(remove()); //Removemos o valor salvo na última posição
 		//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
 		posRabo--;
 		quads[posRabo] = quadVazio;
-	}
+		posi[posRabo] = posRabo;
+				
+		String[] aux1 = new String[21];
+		
+		conteudoInvert[posRabo] = null;
+		aux1 = conteudoInvert;
+		for(int i = 0; i <= posRabo; i++) {
+			conteudo[posRabo -i] = aux1[i];
+						
+		 }
+	  }
 	
 	//-------------------------------PILHA SEQUENCIAL-------------------------------------------------
 		private static String dados[];

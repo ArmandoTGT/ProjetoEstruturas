@@ -5,10 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -26,6 +31,10 @@ public class PilhaScreen implements Screen, TextInputListener{
 	static Texture quadValido;
 	static Texture quadVazio;
 	static Texture cabeca;
+	private static int posi[];
+	private static String[] conteudo;
+	static BitmapFont font[];
+	static String[] conteudoInvert;
 	
 
 	/*
@@ -39,6 +48,22 @@ public class PilhaScreen implements Screen, TextInputListener{
 		cabeca = new Texture("coisa/PonteiroTopo.png");
 		Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
 		PilhaSeq();
+		conteudo = new String[21];
+		posi = new int[21];
+		conteudoInvert = new String[21];
+		FileHandle caminho = new FileHandle("coisa/font.ttf");
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 20;
+		
+		  
+		font = new BitmapFont[21];
+		for(int i = 0; i <= 20; i++) {
+			 
+		font[i] = generator.generateFont(parameter);
+		font[i].setColor(Color.valueOf("646b6d"));
+		  }
+		generator.dispose();
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
@@ -80,7 +105,19 @@ public class PilhaScreen implements Screen, TextInputListener{
 				 */
 				game.balde.draw(image(i), -64, -370 + 129 * (i - 1)); 
 			}
-			if(posRabo != 0) game.balde.draw(cabeca, -291, -369 + 129 * (posRabo - 1));
+			if(posRabo != 0) {
+				game.balde.draw(cabeca, -291, -369 + 129 * (posRabo - 1));
+				for(int i = 0; i <= 20; i++) {
+					try {
+										
+				font[posi[i]].draw(game.balde, conteudo[i], -2,	-300 + 129 * (posi[i] - 1));
+				
+				}
+				catch (Exception e) {
+				
+				}
+				}
+			}
 		
 		game.balde.end();
 		hud.stage.act(delta);
@@ -157,6 +194,8 @@ public class PilhaScreen implements Screen, TextInputListener{
 		//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
 		elementos = Integer.parseInt(text);
 		
+		
+		
 	}
 
 	@Override
@@ -174,6 +213,13 @@ public class PilhaScreen implements Screen, TextInputListener{
 		//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
 		quads[posRabo] = quadValido;
 		posRabo++;
+		
+		posi[posRabo - 1] = posRabo;
+		
+		
+		conteudo[posRabo - 1] = valor;
+		
+		
 	}
 	
 	public static void removeTela() {
@@ -181,6 +227,12 @@ public class PilhaScreen implements Screen, TextInputListener{
 		//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
 		posRabo--;
 		quads[posRabo] = quadVazio;
+		posi[posRabo] = posRabo;
+		
+		
+		
+		conteudo[posRabo] = null;
+		
 	}
 	
 	//-------------------------------PILHA SEQUENCIAL-------------------------------------------------

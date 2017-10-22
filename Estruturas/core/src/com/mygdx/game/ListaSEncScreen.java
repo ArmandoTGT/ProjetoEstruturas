@@ -7,10 +7,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -31,6 +36,7 @@ public class ListaSEncScreen implements Screen{
 	static Texture setaDireita;
 	static Texture cabeca;
 	private static int posRabo;
+	static BitmapFont font;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -44,6 +50,14 @@ public class ListaSEncScreen implements Screen{
 		quadVazio = new Texture("coisa/quadradoVazio.png");
 		setaDireita = new Texture("coisa/setaDireita.png");
 		cabeca = new Texture("coisa/PonteiroCabeça.png");		
+		FileHandle caminho = new FileHandle("coisa/font.ttf");
+		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
+		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		  parameter.size = 20;		  
+		  font = new BitmapFont();					 
+		  font = generator.generateFont(parameter);	
+		  font.setColor(Color.valueOf("646b6d"));		  
+		  generator.dispose();
 		lista = new LSEGen(quadValido, quadVazio);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
@@ -75,6 +89,7 @@ public class ListaSEncScreen implements Screen{
 			for(int i = 1; i <= lista.tamanho(); i++) {
 						game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
 						game.balde.draw(setaDireita, -640 + 120 + (128 * i) + (192 * (i -1)), 0);
+						font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
 				}
 		game.balde.end();
 		hud.stage.act(delta);

@@ -32,18 +32,24 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	 static Texture quadValido;
 	 static Texture quadVazio;
 	 static BitmapFont font[];
+	 private static int posRabo;
+	 private static int posi[];
+	 private static String[] conteudo;
 	 /*
 	  * Todos os textures precisam ser construidos
 	  * apenas, e somente apenas, no construtor
 	  */
 	 public ListaSeqScreen(Executor game){
+	  posRabo = 0;
+	  conteudo = new String[21];
+	  posi = new int[21];
 	  FileHandle caminho = new FileHandle("coisa/font.ttf");
 	  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 	  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 	  parameter.size = 20;
 	  
-	  font = new BitmapFont[20];
-	  for(int i = 0; i < 20; i++) {
+	  font = new BitmapFont[21];
+	  for(int i = 0; i <= 20; i++) {
 		 
 	  font[i] = generator.generateFont(parameter);
 	  font[i].setColor(Color.valueOf("646b6d"));
@@ -88,8 +94,22 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 			
 			for(int i = 1; i <= elementos; i++) {
 				game.balde.draw(image(i), -640 + 129 * (i - 1), 0); //----
-				font[i].draw(game.balde, "teste", -640 + 45 + 129 * (i - 1),	70);
+				
 			}
+			
+			if(posRabo != 0) { 
+				
+				for(int i = 0; i <= 20; i++) {
+					try {
+										
+				font[posi[i]].draw(game.balde, conteudo[i], -640 + 45 + 129 * (posi[i] - 1),	70);
+				
+				}
+				catch (Exception e) {
+				
+				}
+				}
+				}
 		/*for(int i = 0; i < 50; i++) {			
 			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
 		}*/
@@ -167,6 +187,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	public void input(String text) {
 		//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
 		elementos = Integer.parseInt(text);
+		
 	}
 
 	@Override
@@ -182,11 +203,18 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	public static void insereTela(int pos, String valor) {
 		insere(pos, valor);
 		quads[pos - 1] = quadValido;
+		posRabo++;
+		posi[pos - 1] = pos;
+		conteudo[pos - 1] = valor;
+		
 	}
 	
 	public static void removeTela(int pos) {
 		remove(pos);
 		quads[pos - 1] = quadVazio;
+		posRabo--;
+		posi[pos - 1] = pos;
+		conteudo[pos - 1] = null;
 	}
 	
 	//-------------------------------LISTA SEQUENCIAL-------------------------------------------------
