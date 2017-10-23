@@ -1,6 +1,10 @@
 package com.mygdx.game;
 
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
@@ -23,12 +27,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ListaSeqScreen implements Screen, TextInputListener{
 	
-	private Executor game;
+	private static Executor game;
 	 private OrthographicCamera camera;
 	 private Viewport port;
 	 private ListaSeqHud hud;
 	 private Texture fundo;
-	 private int elementos; //Total de elementos que serão mostrados na tela
+	 private static int elementos = 0; //Total de elementos que serão mostrados na tela
 	 static Texture quadValido;
 	 static Texture quadVazio;
 	 static BitmapFont font[];
@@ -36,6 +40,8 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	 private static int posRabo;
 	 private static int posi[];
 	 private static String[] conteudo;
+	 static int aux = 0;
+	 static boolean cont = true;
 	 /*
 	  * Todos os textures precisam ser construidos
 	  * apenas, e somente apenas, no construtor
@@ -54,24 +60,22 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	  for(int i = 0; i <= 20; i++) {
 		 
 	  font[i] = generator.generateFont(parameter);
-	  font[i].setColor(Color.valueOf("646b6d"));
+	  font[i].setColor(Color.valueOf("b7b7b7"));
 	  }
 	  generator.dispose();
 	  
-
 	  FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
-	  FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
-	  parameter2.size = 20;
+		FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
+		parameter2.size = 20;
 		
 		  
-	  font2 = new BitmapFont[21];
-	  for(int i = 0; i <= 20; i++) {
+		font2 = new BitmapFont[21];
+		for(int i = 0; i <= 20; i++) {
 			 
-		  font2[i] = generator2.generateFont(parameter);
-		  font2[i].setColor(Color.valueOf("646b6d"));
-		 }
-	  generator2.dispose();
-	  
+		font2[i] = generator2.generateFont(parameter);
+		font2[i].setColor(Color.valueOf("b7b7b7"));
+		  }
+		generator2.dispose();
 	  
 	  quadValido = new Texture("coisa/quadradoPreenchido.png");
 	  quadVazio = new Texture("coisa/quadradoVazio.png");
@@ -111,7 +115,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 			
 			for(int i = 1; i <= elementos; i++) {
 				game.balde.draw(image(i), -640 + 129 * (i - 1), 0); //----
-				font2[i].draw(game.balde, String.valueOf(i +"*"), -640 + 45 + 129 * (i - 1),	150);
+				font2[i].draw(game.balde, String.valueOf(i +"*"), -685 + 45 + 129 * (i - 1),	115);
 				
 			}
 			
@@ -147,34 +151,36 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	}
 
 
-	private void setmoveCamera(float dt) {
-		
-		if (Gdx.input.isKeyPressed(Keys.A)) {
-			camera.zoom += 0.02;
-			if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
-		}
-		if (Gdx.input.isKeyPressed(Keys.Q)) {
-			camera.zoom -= 0.02;			
-			if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
-		}
-		
-		
-		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
-			camera.position.x -= 1000 * dt;
+	 private void setmoveCamera(float dt) {
 			
-			if(camera.position.x < -616.67914)camera.position.x = (float) -616.67914;
+			if (Gdx.input.isKeyPressed(Keys.A)) {
+				camera.zoom += 0.02;
+				if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
+			}
+			if (Gdx.input.isKeyPressed(Keys.Q)) {
+				camera.zoom -= 0.02;			
+				if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
+			}
+			
+			
+			if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
+				camera.position.x -= 1000 * dt;			
+				if(camera.position.x < -616.67914)camera.position.x = (float) -616.67914;
+			}
+			else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
+				camera.position.x += 1000 * dt;
+				if(camera.position.x > 5326.621)camera.position.x = (float) 5326.621;
+			}
+			else if(Gdx.input.isKeyPressed(Keys.UP) ){
+				camera.position.y += 1000 * dt;			
+				if(camera.position.y > 2267.0886)camera.position.y = (float) 2267.0886;
+			}
+			else if(Gdx.input.isKeyPressed(Keys.DOWN) ){
+				camera.position.y -= 1000 * dt;				
+				if(camera.position.y < -183.99722)camera.position.y = (float) -183.99722;
+			}
+			
 		}
-		else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
-			camera.position.x += 1000 * dt;
-		}
-		else if(Gdx.input.isKeyPressed(Keys.UP) ){
-			camera.position.y += 1000 * dt;
-		}
-		else if(Gdx.input.isKeyPressed(Keys.DOWN) ){
-			camera.position.y -= 1000 * dt;
-		}
-		
-	}
 
 
 	public void resize(int width, int height) {
@@ -206,10 +212,26 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	}
 
 	@Override
+	//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
 	public void input(String text) {
-		//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
-		elementos = Integer.parseInt(text);
-		
+		try {
+			if(isNumber(text)) {
+				elementos = Integer.parseInt(text);	
+				aux = elementos;
+			}
+			else 
+			{
+				throw new Exception();
+			}
+			
+		}
+		catch(Exception n) {
+			JOptionPane.showMessageDialog(null, "Estrutura Limitada! Apenas seram aceitos números entre 1 e 20!", 
+										"Error", 
+										ERROR_MESSAGE);
+			
+			Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
+		}
 	}
 
 	@Override
@@ -223,20 +245,69 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	 */
 	
 	public static void insereTela(int pos, String valor) {
-		insere(pos, valor);
-		quads[pos - 1] = quadValido;
-		posRabo++;
-		posi[pos - 1] = pos;
-		conteudo[pos - 1] = valor;
+		try {
+			//Verifica se o valor está dentro do padrão
+			if((pos < 1) || (pos > 20)) {
+				throw new Exception();
+			}
+
+			if((pos > elementos)) {
+				throw new Exception();
+			}
+			
+			int n = Integer.parseInt(valor);
+			
+			insere(pos, valor);
+			quads[pos - 1] = quadValido;
+			posRabo++;
+			aux++;
+			posi[pos - 1] = pos;
+			conteudo[pos - 1] = valor;
+		}
+		catch(NumberFormatException nf){
+			JOptionPane.showMessageDialog(null, "Conteúdo apenas composto por números!", 
+										  "Error", ERROR_MESSAGE);
+		}
+		catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Posição Inválida! Digite uma posição entre 1 e " + elementos + "!", 
+					  					  "Error", ERROR_MESSAGE);
+		}
 		
 	}
 	
 	public static void removeTela(int pos) {
-		remove(pos);
-		quads[pos - 1] = quadVazio;
-		posRabo--;
-		posi[pos - 1] = pos;
-		conteudo[pos - 1] = null;
+		try {
+			if((remove(pos) == null) && (aux == 0)) {
+				throw new Exception();
+			}
+			else
+			{
+				//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
+				quads[pos - 1] = quadVazio;
+				posRabo--;
+				aux--;
+				posi[pos - 1] = pos;
+				conteudo[pos - 1] = null;
+			}
+		}
+		catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
+										  "Error", ERROR_MESSAGE);
+			
+			game.setScreen(new ListaSeqScreen(game));
+		}	
+
+	}
+	
+	/*
+	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
+	 */
+	public boolean isNumber(String text) throws Exception {
+		int number = Integer.parseInt(text);
+		if((number < 1) || (number > 20)){
+			return false;
+		}
+			return true;
 	}
 	
 	//-------------------------------LISTA SEQUENCIAL-------------------------------------------------

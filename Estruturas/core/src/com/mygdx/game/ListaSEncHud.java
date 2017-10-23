@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.graphics.Color;
@@ -87,9 +89,11 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 				super.clicked(event, x, y);
 				
 				if(elementos == 0) {
+					delete = false;
 					Gdx.input.getTextInput(ListaSEncHud.this, "Adicionar", "", "Conteudo");
 				}
 				else {
+					delete = false;
 					Gdx.input.getTextInput(ListaSEncHud.this, "Adicionar", "", "Posição-Conteudo");
 				}
 				}	    	
@@ -120,9 +124,11 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					elementos--; //Permitirá excluir
-					delete = true;
-					Gdx.input.getTextInput(ListaSEncHud.this, "Remover", "", "Posição");
+					if(elementos >0) {
+						delete = true;
+						Gdx.input.getTextInput(ListaSEncHud.this, "Remover", "", "Posição");
+					}
+					else JOptionPane.showMessageDialog(null, "Adicione algo antes de remover!");
 				}    	 
 	     	});
 	     stage.addActor(buttonRemove);
@@ -184,13 +190,19 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 		}
 		else if( (elementos > 0) && (delete == false) ) {
 			elementos++;
-			String entrada [] = text.split("-"); //------Exceção quando coloca errado
+			String entrada[] = text.split("-"); //------Exceção quando coloca errado
 			pos = Integer.parseInt(entrada[0]); //-------Exceção elemento diferente de numero
+			try {
+			if(elementos == pos) throw new Exception();
 			ListaSEncScreen.insereTela(pos, entrada[1]);
+			}catch(Exception ex) {
+			
+			}
 		}
-		else if(delete == true) {
+		else if(delete == true && (Integer.parseInt(text) <= elementos)) {
 			ListaSEncScreen.removeTela(Integer.parseInt(text)); //------Exceção quando coloca diferente de numero
 			delete = false;
+			elementos--; //Permitirá excluir
 		}
 	}
 

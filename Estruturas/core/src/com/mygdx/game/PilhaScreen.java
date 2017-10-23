@@ -1,6 +1,10 @@
 package com.mygdx.game;
 
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
@@ -22,12 +26,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class PilhaScreen implements Screen, TextInputListener{
 	
 	private static int posRabo;
-	private Executor game;
+	private static Executor game;
 	private OrthographicCamera camera;
 	private Viewport port;
 	private PilhaHud hud; // Interface de interação com o usuuário(hud) que fica encima da nossa screen
 	private Texture fundo;
-	private int elementos; //Total de elementos que serão mostrados na tela
+	private static int elementos; //Total de elementos que serão mostrados na tela
 	static Texture quadValido;
 	static Texture quadVazio;
 	static Texture cabeca;
@@ -36,6 +40,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 	static BitmapFont font[];
 	static BitmapFont font2[];
 	static String[] conteudoInvert;
+	static int aux = 0;
 	
 
 	/*
@@ -52,7 +57,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 		conteudo = new String[21];
 		posi = new int[21];
 		conteudoInvert = new String[21];
-		
+
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -63,9 +68,9 @@ public class PilhaScreen implements Screen, TextInputListener{
 		for(int i = 0; i <= 20; i++) {
 			 
 		font[i] = generator.generateFont(parameter);
-		font[i].setColor(Color.valueOf("646b6d"));
+		font[i].setColor(Color.valueOf("b7b7b7"));
 		  }
-		generator.dispose();		
+		generator.dispose();
 		
 		FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
 		FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
@@ -76,11 +81,9 @@ public class PilhaScreen implements Screen, TextInputListener{
 		for(int i = 0; i <= 20; i++) {
 			 
 		font2[i] = generator2.generateFont(parameter);
-		font2[i].setColor(Color.valueOf("646b6d"));
+		font2[i].setColor(Color.valueOf("b7b7b7"));
 		  }
 		generator2.dispose();
-		
-		
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
@@ -120,11 +123,12 @@ public class PilhaScreen implements Screen, TextInputListener{
 				 * três blocos longe do centro e para alinhas com os botões superiores,
 				 * alinhamos a posição horizontal em 64
 				 */
-				game.balde.draw(image(i), -64, -370 + 129 * (i - 1));
-				font2[i].draw(game.balde, String.valueOf(i+"*"), 100,	-300 + 129 * (i - 1));
+				game.balde.draw(image(i), -64, -370 + 129 * (i - 1)); 
+				font2[i].draw(game.balde, String.valueOf(i+"*"), -50,	-250 + 129 * (i - 1));
+				
 			}
 			if(posRabo != 0) {
-				game.balde.draw(cabeca, -291, -369 + 129 * (posRabo - 1));
+				game.balde.draw(cabeca, -285, -369 + 129 * (posRabo - 1));
 				for(int i = 0; i <= 20; i++) {
 					try {
 										
@@ -157,23 +161,29 @@ public class PilhaScreen implements Screen, TextInputListener{
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			camera.zoom += 0.02;
+			if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
 		}
 		if (Gdx.input.isKeyPressed(Keys.Q)) {
-			camera.zoom -= 0.02;
+			camera.zoom -= 0.02;			
+			if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
 		}
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
-			camera.position.x -= 1000 * dt;
+			camera.position.x -= 1000 * dt;			
+			if(camera.position.x < -616.67914)camera.position.x = (float) -616.67914;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
 			camera.position.x += 1000 * dt;
+			if(camera.position.x > 5326.621)camera.position.x = (float) 5326.621;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.UP) ){
-			camera.position.y += 1000 * dt;
+			camera.position.y += 1000 * dt;			
+			if(camera.position.y > 2267.0886)camera.position.y = (float) 2267.0886;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.DOWN) ){
-			camera.position.y -= 1000 * dt;
+			camera.position.y -= 1000 * dt;				
+			if(camera.position.y < -183.99722)camera.position.y = (float) -183.99722;
 		}
 		
 	}
@@ -208,12 +218,28 @@ public class PilhaScreen implements Screen, TextInputListener{
 	}
 
 	@Override
+	/*
+	 * Aqui o tamanho da lista será definido e 
+	 * teremos um sinal que podemos desenhar a estrutura
+	 */
 	public void input(String text) {
-		//Aqui o tamanho da lista será definido e teremos um sinal que podemos desenhar a estrutura
-		elementos = Integer.parseInt(text);
-		
-		
-		
+		try {
+			
+			if(isNumber(text)) {
+				elementos = Integer.parseInt(text);		
+			}
+			else 
+			{
+				throw new Exception();
+			}
+			
+		}
+		catch(Exception n) {
+			JOptionPane.showMessageDialog(null, "Estrutura Limitada! Apenas seram aceitos números entre 1 e 20!", 
+										"Error", 
+										ERROR_MESSAGE);	
+			Gdx.input.getTextInput(this, "Pilha Sequencial", "", "Tamanho da estrutura");
+		}		
 	}
 
 	@Override
@@ -226,31 +252,66 @@ public class PilhaScreen implements Screen, TextInputListener{
 	 * na tela a posição que teve alguma alteração
 	 */
 	
-	public static void insereTela( String valor) {
-		push(valor);//Inserimos na posição inicial um novo valor
-		//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
-		quads[posRabo] = quadValido;
-		posRabo++;
-		
-		posi[posRabo - 1] = posRabo;
-		
-		
-		conteudo[posRabo - 1] = valor;
-		
-		
+	public static void insereTela(String valor) {
+		try {
+			//Gera exceção caso o usuário tente passar o número de elementos da pilha!
+			if((topo != -1) && (aux == elementos)) {
+				throw new Exception();
+			}
+			
+			int n = Integer.parseInt(valor);//Gera uam exceção caso o valor do conteúdo não for um inteiro
+			push(valor);//Inserimos na posição inicial um novo valor
+			//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
+			quads[posRabo] = quadValido;
+			posRabo++;
+			aux++;
+			posi[posRabo - 1] = posRabo;
+			conteudo[posRabo - 1] = valor;
+			
+		}
+		catch(NumberFormatException nf){
+			JOptionPane.showMessageDialog(null, "Conteúdo apenas composto por números!", 
+										  "Error", ERROR_MESSAGE);
+		}
+		catch(Exception e){
+			JOptionPane.showMessageDialog(null, "Posição Inválida! Digite uma posição entre 1 e " + elementos + "!", 
+										  "Error", ERROR_MESSAGE);
+		}	
 	}
 	
 	public static void removeTela() {
-		System.out.println(pop()); //Removemos o valor salvo na última posição
-		//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
-		posRabo--;
-		quads[posRabo] = quadVazio;
-		posi[posRabo] = posRabo;
-		
-		
-		
-		conteudo[posRabo] = null;
-		
+		try {
+			if((pop() == "null") && (aux == 0)) {
+				throw new Exception();
+			} 
+			else
+			{
+				System.out.println(pop()); //Removemos o valor salvo na última posição
+				//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
+				posRabo--;
+				aux--;
+				quads[posRabo] = quadVazio;
+				posi[posRabo] = posRabo;
+				conteudo[posRabo] = null;
+			}
+		}
+		catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
+										  "Error", ERROR_MESSAGE);
+			game.setScreen(new PilhaScreen(game));
+		}
+	}
+	
+	
+	/*
+	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
+	 */
+	public boolean isNumber(String text) throws Exception {
+		int number = Integer.parseInt(text);
+		if((number < 1) || (number > 20)){
+			return false;
+		}
+			return true;
 	}
 	
 	//-------------------------------PILHA SEQUENCIAL-------------------------------------------------
