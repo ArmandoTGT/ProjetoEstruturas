@@ -32,6 +32,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	 static Texture quadValido;
 	 static Texture quadVazio;
 	 static BitmapFont font[];
+	 static BitmapFont font2[];
 	 private static int posRabo;
 	 private static int posi[];
 	 private static String[] conteudo;
@@ -43,6 +44,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	  posRabo = 0;
 	  conteudo = new String[21];
 	  posi = new int[21];
+	  
 	  FileHandle caminho = new FileHandle("coisa/font.ttf");
 	  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 	  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -55,6 +57,21 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	  font[i].setColor(Color.valueOf("646b6d"));
 	  }
 	  generator.dispose();
+	  
+
+	  FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
+	  FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
+	  parameter2.size = 20;
+		
+		  
+	  font2 = new BitmapFont[21];
+	  for(int i = 0; i <= 20; i++) {
+			 
+		  font2[i] = generator2.generateFont(parameter);
+		  font2[i].setColor(Color.valueOf("646b6d"));
+		 }
+	  generator2.dispose();
+	  
 	  
 	  quadValido = new Texture("coisa/quadradoPreenchido.png");
 	  quadVazio = new Texture("coisa/quadradoVazio.png");
@@ -94,6 +111,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 			
 			for(int i = 1; i <= elementos; i++) {
 				game.balde.draw(image(i), -640 + 129 * (i - 1), 0); //----
+				font2[i].draw(game.balde, String.valueOf(i +"*"), -640 + 45 + 129 * (i - 1),	150);
 				
 			}
 			
@@ -133,14 +151,18 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			camera.zoom += 0.02;
+			if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
 		}
 		if (Gdx.input.isKeyPressed(Keys.Q)) {
-			camera.zoom -= 0.02;
+			camera.zoom -= 0.02;			
+			if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
 		}
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
 			camera.position.x -= 1000 * dt;
+			
+			if(camera.position.x < -616.67914)camera.position.x = (float) -616.67914;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
 			camera.position.x += 1000 * dt;

@@ -35,6 +35,7 @@ public class FilaScreen implements Screen, TextInputListener{
 	private static int posi[];
 	private static String[] conteudo;
 	 static BitmapFont font[];
+	 static BitmapFont font2[];
 	 static String[] conteudoInvert;
 
 	/*
@@ -58,6 +59,20 @@ public class FilaScreen implements Screen, TextInputListener{
 		font[i].setColor(Color.valueOf("646b6d"));
 		  }
 		generator.dispose();
+		
+		 FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
+		  FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
+		  parameter2.size = 20;
+			
+			  
+		  font2 = new BitmapFont[21];
+		  for(int i = 0; i <= 20; i++) {
+				 
+			  font2[i] = generator2.generateFont(parameter);
+			  font2[i].setColor(Color.valueOf("646b6d"));
+			 }
+		  generator2.dispose();
+		  
 		quadValido = new Texture("coisa/quadradoPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
 		cabeca = new Texture("coisa/PonteiroInicio.png");
@@ -93,13 +108,14 @@ public class FilaScreen implements Screen, TextInputListener{
 		game.balde.draw(cabeca, -640, 120);
 		for(int i = 1; i <= elementos; i++) {
 				game.balde.draw(image(i), -640 + 105 +( 128 * (i - 1)), 0); //----
+				font2[i].draw(game.balde, String.valueOf(i +"*"), -640 + 160 + 129 * (i - 1),	150);
 			}
 		if(posRabo != 0) { 
 			game.balde.draw(rabo, -640 + 147 + (128 * (posRabo - 1)), -184);
 			for(int i = 0; i <= 20; i++) {
 				try {
 									
-			font[posi[i]].draw(game.balde, conteudoInvert[i -1], -640 + 45 + 129 * (posi[i]),	70);
+			font[posi[i]].draw(game.balde, conteudoInvert[i -1], -640 + 35 + 129 * (posi[i]),	70);
 			
 			}
 			catch (Exception e) {

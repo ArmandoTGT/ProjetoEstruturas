@@ -34,6 +34,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 	private static int posi[];
 	private static String[] conteudo;
 	static BitmapFont font[];
+	static BitmapFont font2[];
 	static String[] conteudoInvert;
 	
 
@@ -43,14 +44,15 @@ public class PilhaScreen implements Screen, TextInputListener{
 	 */
 	public PilhaScreen(Executor game){
 		posRabo = 0;
-		quadValido = new Texture("coisa/quadradoPreenchido.png");
-		quadVazio = new Texture("coisa/quadradoVazio.png");
+		quadValido = new Texture("coisa/quadradoPilhaPreenchido.png");
+		quadVazio = new Texture("coisa/quadradoPilhaVazio.png");
 		cabeca = new Texture("coisa/PonteiroTopo.png");
 		Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
 		PilhaSeq();
 		conteudo = new String[21];
 		posi = new int[21];
 		conteudoInvert = new String[21];
+		
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -63,7 +65,22 @@ public class PilhaScreen implements Screen, TextInputListener{
 		font[i] = generator.generateFont(parameter);
 		font[i].setColor(Color.valueOf("646b6d"));
 		  }
-		generator.dispose();
+		generator.dispose();		
+		
+		FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
+		FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
+		parameter2.size = 20;
+		
+		  
+		font2 = new BitmapFont[21];
+		for(int i = 0; i <= 20; i++) {
+			 
+		font2[i] = generator2.generateFont(parameter);
+		font2[i].setColor(Color.valueOf("646b6d"));
+		  }
+		generator2.dispose();
+		
+		
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
@@ -103,7 +120,8 @@ public class PilhaScreen implements Screen, TextInputListener{
 				 * três blocos longe do centro e para alinhas com os botões superiores,
 				 * alinhamos a posição horizontal em 64
 				 */
-				game.balde.draw(image(i), -64, -370 + 129 * (i - 1)); 
+				game.balde.draw(image(i), -64, -370 + 129 * (i - 1));
+				font2[i].draw(game.balde, String.valueOf(i+"*"), 100,	-300 + 129 * (i - 1));
 			}
 			if(posRabo != 0) {
 				game.balde.draw(cabeca, -291, -369 + 129 * (posRabo - 1));
@@ -248,7 +266,7 @@ public class PilhaScreen implements Screen, TextInputListener{
     		topo = -1;
     		quads = new Texture[20];
 			for(int i = 0; i<20 ; i++) {
-	    		quads[i] = new Texture("coisa/quadradoVazio.png");
+	    		quads[i] = new Texture("coisa/quadradoPilhaVazio.png");
 	    	}
     	}
 

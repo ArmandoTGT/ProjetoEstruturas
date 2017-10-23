@@ -37,6 +37,7 @@ public class ListaSEncScreen implements Screen{
 	static Texture cabeca;
 	private static int posRabo;
 	static BitmapFont font;
+	static BitmapFont font2;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -51,6 +52,7 @@ public class ListaSEncScreen implements Screen{
 		setaDireita = new Texture("coisa/setaDireita.png");
 		cabeca = new Texture("coisa/PonteiroCabeça.png");		
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
+		
 		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		  parameter.size = 20;		  
@@ -58,6 +60,14 @@ public class ListaSEncScreen implements Screen{
 		  font = generator.generateFont(parameter);	
 		  font.setColor(Color.valueOf("646b6d"));		  
 		  generator.dispose();
+		  
+		  FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
+		  FreeTypeFontParameter parameter2 = new FreeTypeFontParameter();
+		  parameter2.size = 20;		  
+		  font2 = new BitmapFont();					 
+		  font2 = generator2.generateFont(parameter2);	
+		  font2.setColor(Color.valueOf("646b6d"));		  
+		  generator2.dispose();
 		lista = new LSEGen(quadValido, quadVazio);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
@@ -90,6 +100,7 @@ public class ListaSEncScreen implements Screen{
 						game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
 						game.balde.draw(setaDireita, -640 + 120 + (128 * i) + (192 * (i -1)), 0);
 						font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
+						font2.draw(game.balde, String.valueOf(i+"*"), -640 + 128 + 45 + (320 * (i - 1)),	152);
 				}
 		game.balde.end();
 		hud.stage.act(delta);
