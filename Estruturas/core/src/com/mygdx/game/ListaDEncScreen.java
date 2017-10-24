@@ -106,7 +106,7 @@ public class ListaDEncScreen implements Screen{
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		game.balde.draw(fundo, -1280, -720);
+		game.balde.draw(fundo, -1980, -1020);
 		game.balde.draw(cabeca, -640, 120);	
 		/*
 		 * Esse for fará uma seta após o bloco inicial, pois ele será a seta 
@@ -166,7 +166,7 @@ public class ListaDEncScreen implements Screen{
 		}
 		else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
 			camera.position.x += 1000 * dt;
-			if(camera.position.x > 5326.621)camera.position.x = (float) 5326.621;
+			if(camera.position.x > 6326.621)camera.position.x = (float) 6326.621;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.UP) ){
 			camera.position.y += 1000 * dt;			
