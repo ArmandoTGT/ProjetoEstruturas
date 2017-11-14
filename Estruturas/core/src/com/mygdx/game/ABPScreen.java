@@ -40,10 +40,10 @@ public class ABPScreen implements Screen{
 	static Texture setaDireita;
 	static Texture setaEsquerda;
 	static Texture raiz;
-	private static int raizAux, indice, x, y, insereAux;
+	private static int raizAux, indice, x, y, insereAux[];
 	private static NoABP no;
 	private static NoABP nos[];
-	private static NoABP pais[];
+	
 	//Atributos relacionados a construção a fonte
 	static BitmapFont font;
 	static BitmapFont font2;
@@ -57,7 +57,8 @@ public class ABPScreen implements Screen{
 		
 		cont = 0;
 		nos = new NoABP[20];
-		pais = new NoABP[20];
+		
+		insereAux = new int[20];
 		posicaoAux = 0;
 		quadValido = new Texture("coisa/BlocoEncadeado.png");
 		//Precisa arrumar as setas e a raiz
@@ -114,7 +115,7 @@ public class ABPScreen implements Screen{
 			arvore.raiz().setY(150);
 			
 			game.balde.draw(arvore.raiz().getQuad(), arvore.raiz().getX(), arvore.raiz().getY());
-			
+			font.draw(game.balde, String.valueOf(arvore.raiz().getConteudo()), arvore.raiz().getX() + 50,	arvore.raiz().getY() + 70);
 			
 		}
 		for(int i = 0; i < arvore.tamanho(); i++) {
@@ -123,14 +124,22 @@ public class ABPScreen implements Screen{
 				try {
 					
 				if(nos[i].getDirecao() ==  1)	{//Direita
-					//System.out.println("direita");
-					game.balde.draw(arvore.busca(insereAux).getQuad(), pais[i].getX() +150 , pais[i].getY() -150 );
-					
+					//System.out.println(arvore.busca(insereAux[i]).getPai().getConteudo());
+					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 ,
+							arvore.busca(insereAux[i]).getPai().getY() -150 );
+					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 );
+					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
+					font.draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()), 
+							arvore.busca(insereAux[i]).getX() + 50,	arvore.busca(insereAux[i]).getY() + 70);
 				}
 				else if(nos[i].getDirecao() == 2) {//Esquerda
-					//System.out.println("esquerda");
-					game.balde.draw(arvore.busca(insereAux).getQuad(), pais[i].getX() -150, pais[i].getY() -150);
-					
+					//System.out.println(arvore.busca(insereAux[i]).getPai().getConteudo());
+					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150,
+							arvore.busca(insereAux[i]).getPai().getY() -150);
+					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() -150 );
+					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
+					font.draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()),
+							arvore.busca(insereAux[i]).getX() + 50, arvore.busca(insereAux[i]).getY() + 70);
 				}
 			}catch(Exception e) {
 				/*game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
@@ -219,8 +228,8 @@ public class ABPScreen implements Screen{
 		arvore.insere(valor);
 		nos[cont] = arvore.ultimoNo;
 		
-		insereAux = valor;
-		pais[cont] = arvore.dad;
+		insereAux[cont] = valor;
+		
 		cont++;
 	}
 	/*
