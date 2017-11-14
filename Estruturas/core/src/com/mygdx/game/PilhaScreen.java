@@ -41,6 +41,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 	static BitmapFont font2[];
 	static String[] conteudoInvert;
 	static int aux = 0;
+	static String pesquisa;
 	
 
 	/*
@@ -140,6 +141,20 @@ public class PilhaScreen implements Screen, TextInputListener{
 				}
 				}
 			}
+			
+			for(int i = 0; i <= 21; i++) {
+				//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
+				//	se for 	igual alteramos a cor da fonte
+					try {
+				if(pesquisa.equals(conteudo[i])) {
+					font[i + 1].setColor(Color.valueOf("7fff00"));
+				}else {
+					font[i + 1].setColor(Color.valueOf("b7b7b7"));
+				}
+					}catch (Exception f){
+					
+				}
+				}
 		
 		game.balde.end();
 		hud.stage.act(delta);
@@ -302,6 +317,10 @@ public class PilhaScreen implements Screen, TextInputListener{
 		}
 	}
 	
+	public static void Pesquisa(String text){
+		pesquisa = text;		
+	}
+	
 	
 	/*
 	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
@@ -392,5 +411,8 @@ public class PilhaScreen implements Screen, TextInputListener{
     public static Texture image(int pos) {
       	return quads[pos - 1];
     }
+
+
+	
 	
 }

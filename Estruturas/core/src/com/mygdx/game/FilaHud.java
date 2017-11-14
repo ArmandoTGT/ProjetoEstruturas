@@ -27,6 +27,7 @@ public class FilaHud implements Disposable, TextInputListener{
 	private Viewport port;
 	
 	private Executor game;	
+	private int opcao;
 	
 	
     TextButtonStyle textButtonStyleAdd;
@@ -44,8 +45,15 @@ public class FilaHud implements Disposable, TextInputListener{
     Skin skinMenu;
     TextureAtlas buttonAtlasMenu;
     
+    TextButtonStyle textButtonStylePesq;
+    BitmapFont fontPesq;
+    Skin skinPesq;
+    TextureAtlas buttonAtlasPesq;
+    
 	
 	public FilaHud(SpriteBatch sb, final Executor game) {
+		
+		opcao = 0;
 		
 		this.game = game;
 		
@@ -80,6 +88,7 @@ public class FilaHud implements Disposable, TextInputListener{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				opcao = 0;
 				//Adicionará o tamanho da estrutura
 				Gdx.input.getTextInput(FilaHud.this, "Adicionar", "", "Conteudo");				
 				}	    	
@@ -144,6 +153,39 @@ public class FilaHud implements Disposable, TextInputListener{
 	     	});
 	     stage.addActor(buttonMenu);
 	     
+
+	     
+	     fontPesq = new BitmapFont();
+	     skinPesq = new Skin();
+	     buttonAtlasPesq = new TextureAtlas("Botões/RemoveImg.pack");
+	     skinPesq.addRegions(buttonAtlasPesq);
+	     textButtonStylePesq = new TextButtonStyle();
+	     textButtonStylePesq.font = fontPesq;
+	     textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
+	     textButtonStylePesq.down = skinPesq.getDrawable("RemoverPressionado");
+	     textButtonStylePesq.checked = skinPesq.getDrawable("RemoverNormal");
+	     Button buttonPesq = new TextButton(" ", textButtonStylePesq);
+	     buttonPesq.addListener(new ClickListener() {	    	 
+	    	 	@Override
+				public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+	    		 textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
+					super.exit(event, x, y, pointer, toActor);
+				}
+				@Override
+				public boolean mouseMoved(InputEvent event, float x, float y) {
+					textButtonStylePesq.up = skinPesq.getDrawable("RemoverSelecionado");
+					return super.mouseMoved(event, x, y);
+				}
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					opcao = 1;
+					Gdx.input.getTextInput(FilaHud.this, "Pesquisar", "", "Conteudo");
+					
+				}    	 
+	     	});
+	     stage.addActor(buttonPesq);
+	     
 	     
 		Table table = new Table();
 		table.top();
@@ -152,6 +194,7 @@ public class FilaHud implements Disposable, TextInputListener{
 		table.add(buttonAdd).expandX().pad(10);
 		table.add(buttonRemove).expandX().pad(10);
 		table.add(buttonMenu).expandX().pad(10);
+		table.add(buttonPesq).expandX().pad(10);
 				
 		
 		stage.addActor(table);
@@ -163,7 +206,14 @@ public class FilaHud implements Disposable, TextInputListener{
 	 */
 	@Override
 	public void input(String text) {
-			FilaScreen.insereTela(text);
+		
+	if(opcao ==0) {		
+		FilaScreen.insereTela(text);
+	}
+	else if(opcao == 1) {		
+		FilaScreen.Pesquisa(text);
+	}
+			//FilaScreen.insereTela(text);
 	}
 
 	@Override

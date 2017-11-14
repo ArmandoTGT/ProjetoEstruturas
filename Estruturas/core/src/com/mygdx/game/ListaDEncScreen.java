@@ -44,6 +44,7 @@ public class ListaDEncScreen implements Screen{
 	static BitmapFont font;
 	static BitmapFont font2;
 	static int aux = 1;
+	static String pesquisa;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -116,6 +117,17 @@ public class ListaDEncScreen implements Screen{
 			for(int i = 1; i <= lista.tamanho(); i++) {
 				game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
 				game.balde.draw(setaDireita, -512 + 120 + (320 * (i-1)), 0);
+				//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
+				//se for igual alteramos a cor da fonte
+				try {
+				if(pesquisa.equals(String.valueOf(lista.elemento(i)))){
+					font.setColor(Color.valueOf("7fff00"));
+				}else{
+					font.setColor(Color.valueOf("b7b7b7"));
+				}
+				}catch(Exception f){
+					
+				}
 				font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
 				font2.draw(game.balde, String.valueOf(i+"*"), -690 + 128 + 45 + (320 * (i - 1)),	115);
 				
@@ -257,5 +269,8 @@ public class ListaDEncScreen implements Screen{
 			
 			game.setScreen(new ListaDEncScreen(game));
 		}		
-	}	
+	}
+	public static void Pesquisa(String text) {
+		pesquisa = text;		
+	}
 }

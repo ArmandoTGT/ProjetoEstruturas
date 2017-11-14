@@ -60,6 +60,10 @@ public class MenuScreen implements Screen{
     Skin skinFila;
     TextureAtlas buttonAtlasFila;
 
+    TextButtonStyle textButtonStyleABP;
+    BitmapFont fontABP;
+    Skin skinABP;
+    TextureAtlas buttonAtlasABP;
     private Texture fundo;
     
     
@@ -98,11 +102,7 @@ public class MenuScreen implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				/*
-				 * Através desse método quando apertamos o botão,
-				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
-				 */
-				System.out.println("Sair em construção");
+				System.exit(0);
 			}		    	
 		     });
 	     buttonSair.setPosition(430, 115);
@@ -288,6 +288,43 @@ public class MenuScreen implements Screen{
 	     buttonFila.setPosition(715, 415);
 		 stage.addActor(buttonFila);
 		//end Botão Pilha
+		 
+		//Begin Botão ABP
+		 fontABP = new BitmapFont();
+	     skinABP = new Skin();
+	     buttonAtlasABP = new TextureAtlas("botões/FilaImg.pack");
+	     skinABP.addRegions(buttonAtlasABP);
+	     textButtonStyleABP = new TextButtonStyle();
+	     textButtonStyleABP.font = fontABP;
+	     textButtonStyleABP.up = skinABP.getDrawable("FilaNormal");
+	     textButtonStyleABP.down = skinABP.getDrawable("FilaPressionado");
+	     textButtonStyleABP.checked = skinABP.getDrawable("FilaNormal");
+	     Button buttonABP = new TextButton(" ", textButtonStyleABP);
+	     buttonABP.addListener(new ClickListener() {	    	 
+				@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				textButtonStyleABP.up = skinABP.getDrawable("FilaNormal");
+				super.exit(event, x, y, pointer, toActor);
+			}
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y) {
+				textButtonStyleABP.up = skinABP.getDrawable("FilaSelecionado");
+				return super.mouseMoved(event, x, y);
+			}
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				/*
+				 * Através desse método quando apertamos o botão,
+				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
+				 */
+				game.setScreen(new ABPScreen(game));
+			}		    	
+		     });
+	     buttonABP.setPosition(0, 0);
+		 stage.addActor(buttonABP);
+		//end Botão ABP
+		
 		
 	}
 	

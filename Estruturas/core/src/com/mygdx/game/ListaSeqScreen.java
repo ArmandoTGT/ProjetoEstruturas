@@ -42,6 +42,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	 private static String[] conteudo;
 	 static int aux = 0;
 	 static boolean cont = true;
+	 static String pesquisa;
 	 /*
 	  * Todos os textures precisam ser construidos
 	  * apenas, e somente apenas, no construtor
@@ -130,6 +131,20 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 				catch (Exception e) {
 				
 				}
+				}
+				}
+			
+			for(int i = 0; i <= 21; i++) {
+				//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
+				//	se for 	igual alteramos a cor da fonte
+					try {
+				if(pesquisa.equals(conteudo[i])) {
+					font[i + 1].setColor(Color.valueOf("7fff00"));
+				}else {
+					font[i + 1].setColor(Color.valueOf("b7b7b7"));
+				}
+					}catch (Exception f) {
+					
 				}
 				}
 		/*for(int i = 0; i < 50; i++) {			
@@ -299,6 +314,10 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 
 	}
 	
+	public static void Pesquisa(String text) {
+		pesquisa = text;
+	}
+	
 	/*
 	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
 	 */
@@ -442,6 +461,8 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 		    nElementos--;
 		    return dado;
 		}
+
+		
 
 	
 }

@@ -25,40 +25,47 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class ListaSEncScreen implements Screen{
+public class ABPScreen implements Screen{
 	
 	private static Executor game;
-	private static Random posicao; //Como java aloca onde na memória será salvo, o random representará essa aleatoriedade
+	private static Random posicao; 
 	private static int posicaoAux;
 	private OrthographicCamera camera;
 	private Viewport port;
-	private ListaSEncHud hud;
+	private ABPHud hud;
 	private Texture fundo;
-	private static LSEGen lista;
+	//Atributos relacionados a construção gráfica da arvore
+	private static ABP arvore;
 	static Texture quadValido;
-	static Texture quadVazio;
 	static Texture setaDireita;
-	static Texture cabeca;
-	private static int posRabo;
+	static Texture setaEsquerda;
+	static Texture raiz;
+	private static int raizAux, indice, x, y, insereAux;
+	private static NoABP no;
+	private static NoABP nos[];
+	private static NoABP pais[];
+	//Atributos relacionados a construção a fonte
 	static BitmapFont font;
 	static BitmapFont font2;
-	static int aux = 1;
-	static String pesquisa;
-
+	static int cont;
 	/*
 	 * Todos os textures precisam ser construidos
 	 * apenas, e somente apenas, no construtor
 	 */
-	public ListaSEncScreen(Executor game){
+	public ABPScreen(Executor game){
 		posicao = new Random();
-		posRabo = 0;
+		
+		cont = 0;
+		nos = new NoABP[20];
+		pais = new NoABP[20];
 		posicaoAux = 0;
 		quadValido = new Texture("coisa/BlocoEncadeado.png");
-		quadVazio = new Texture("coisa/quadradoVazio.png");
-		setaDireita = new Texture("coisa/setaDireita.png");
-		cabeca = new Texture("coisa/PonteiroCabeça.png");		
-		
+		//Precisa arrumar as setas e a raiz
+		setaDireita = new Texture("coisa/BlocoEncadeado.png");
+		setaEsquerda = new Texture("coisa/BlocoEncadeado.png");
+		raiz = new Texture("coisa/PonteiroCabeça.png");
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
+		
 		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		  parameter.size = 20;		  
@@ -75,11 +82,11 @@ public class ListaSEncScreen implements Screen{
 		  font2.setColor(Color.valueOf("b7b7b7"));		  
 		  generator2.dispose();
 		  
-		lista = new LSEGen(quadValido, quadVazio);
+		arvore = new ABP(quadValido,setaDireita,setaEsquerda);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
-		hud = new ListaSEncHud(game.balde, game);
+		hud = new ABPHud(game.balde, game);
 		fundo = new Texture("coisa/FundoEstruturas.png");
 	
 		
@@ -100,31 +107,41 @@ public class ListaSEncScreen implements Screen{
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		game.balde.draw(fundo, -1980, -1020);
-		game.balde.draw(cabeca, -640, 120);	
-		
-			for(int i = 1; i <= lista.tamanho(); i++) {
-						game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
-						game.balde.draw(setaDireita, -640 + 120 + (128 * i) + (192 * (i -1)), 0);
-						//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
-						//se for igual alteramos a cor da fonte
-						try {
-						if(pesquisa.equals(String.valueOf(lista.elemento(i)))){
-							font.setColor(Color.valueOf("7fff00"));
-						}else{
-							font.setColor(Color.valueOf("b7b7b7"));
-						}
-						}catch(Exception f){
-							
-						}
-						font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
-						font2.draw(game.balde, String.valueOf(i+"*"), -690 + 128 + 45 + (320 * (i - 1)),	115);
+		game.balde.draw(fundo, -1980, -1020); 
+		if(!arvore.vazia()) {
+			
+			arvore.raiz().setX(-200);
+			arvore.raiz().setY(150);
+			
+			game.balde.draw(arvore.raiz().getQuad(), arvore.raiz().getX(), arvore.raiz().getY());
+			
+			
+		}
+		for(int i = 0; i < arvore.tamanho(); i++) {
+			
+			
+				try {
+					
+				if(nos[i].getDirecao() ==  1)	{//Direita
+					//System.out.println("direita");
+					game.balde.draw(arvore.busca(insereAux).getQuad(), pais[i].getX() +150 , pais[i].getY() -150 );
+					
 				}
+				else if(nos[i].getDirecao() == 2) {//Esquerda
+					//System.out.println("esquerda");
+					game.balde.draw(arvore.busca(insereAux).getQuad(), pais[i].getX() -150, pais[i].getY() -150);
+					
+				}
+			}catch(Exception e) {
+				/*game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
+				game.balde.draw(setaDireita, -640 + 120 + (128 * i) + (192 * (i -1)), 0);
+				font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
+				font2.draw(game.balde, String.valueOf(i+"*"), -690 + 128 + 45 + (320 * (i - 1)),	115);*/
+				} 
+		}
 		game.balde.end();
 		hud.stage.act(delta);
 		hud.stage.draw();
-		
-		
 	}
 
 	
@@ -196,38 +213,17 @@ public class ListaSEncScreen implements Screen{
 		
 	}
 	
-	/*
-	 * Os próximos dois métodos são responsáveis por imprimirem
-	 * na tela a posição que teve alguma alteração
-	 */
-	
-	public static void insereTela(int pos, String valor) {
-		try {
-			//Verifica se o valor está dentro do padrão
-			if((pos < 1) || (pos > 20)) {
-				throw new Exception();
-			}
-			if(pos > aux) {
-				throw new Exception();
-			}
-			
-			int n = Integer.parseInt(valor);
-			
-			lista.insere(pos, valor);
-			aux++;
-			posRabo++;
-
-		}
-		catch(NumberFormatException nf){
-			JOptionPane.showMessageDialog(null, "Conteúdo apenas composto por números!", 
-										  "Error", ERROR_MESSAGE);
-		}
-		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Posição Inválida! Próxima posição " + aux + "!", 
-					  					  "Error", ERROR_MESSAGE);
-		}	
+	public static void insereTela(int valor) {
+		
+		
+		arvore.insere(valor);
+		nos[cont] = arvore.ultimoNo;
+		
+		insereAux = valor;
+		pais[cont] = arvore.dad;
+		cont++;
 	}
-	
+	/*
 	public static void removeTela(int pos) {
 		try {
 			Object j = lista.remove(pos);
@@ -239,17 +235,13 @@ public class ListaSEncScreen implements Screen{
 				posRabo--;
 				aux--;
 			}
-		}
+		} 
 		catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
 										  "Error", ERROR_MESSAGE);
 
-			game.setScreen(new ListaSEncScreen(game));
+			game.setScreen(new ABPScreen(game));
 		}				
 	}
-
-
-	public static void Pesquisa(String text) {
-		pesquisa = text;		
-	}
+	*/
 }

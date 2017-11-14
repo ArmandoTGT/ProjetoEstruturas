@@ -24,7 +24,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ListaDEncHud implements Disposable, TextInputListener{
 	private int elementos; //Nos ajudará na lógica de adicionar e remover
-	private boolean delete;
+	private boolean delete;//bollean e merda
+	private int opcao;
 	
 	public Stage stage;
 	private Viewport port;
@@ -47,10 +48,16 @@ public class ListaDEncHud implements Disposable, TextInputListener{
     Skin skinMenu;
     TextureAtlas buttonAtlasMenu;
     
+    TextButtonStyle textButtonStylePesq;
+    BitmapFont fontPesq;
+    Skin skinPesq;
+    TextureAtlas buttonAtlasPesq;
+    
 	
 	public ListaDEncHud(SpriteBatch sb, final Executor game) {
 		elementos = 0;
 		delete = false;
+		opcao = 0;
 		
 		this.game = game;
 		
@@ -156,6 +163,38 @@ public class ListaDEncHud implements Disposable, TextInputListener{
 	     	});
 	     stage.addActor(buttonMenu);
 	     
+
+	     fontPesq = new BitmapFont();
+	     skinPesq = new Skin();
+	     buttonAtlasPesq = new TextureAtlas("Botões/RemoveImg.pack");
+	     skinPesq.addRegions(buttonAtlasPesq);
+	     textButtonStylePesq = new TextButtonStyle();
+	     textButtonStylePesq.font = fontPesq;
+	     textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
+	     textButtonStylePesq.down = skinPesq.getDrawable("RemoverPressionado");
+	     textButtonStylePesq.checked = skinPesq.getDrawable("RemoverNormal");
+	     Button buttonPesq = new TextButton(" ", textButtonStylePesq);
+	     buttonPesq.addListener(new ClickListener() {	    	 
+	    	 	@Override
+				public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+	    		 textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
+					super.exit(event, x, y, pointer, toActor);
+				}
+				@Override
+				public boolean mouseMoved(InputEvent event, float x, float y) {
+					textButtonStylePesq.up = skinPesq.getDrawable("RemoverSelecionado");
+					return super.mouseMoved(event, x, y);
+				}
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					opcao = 1;
+					Gdx.input.getTextInput(ListaDEncHud.this, "Pesquisar", "", "Conteudo");
+					
+				}    	 
+	     	});
+	     stage.addActor(buttonPesq);
+	     
 	     
 		Table table = new Table();
 		table.top();
@@ -164,6 +203,7 @@ public class ListaDEncHud implements Disposable, TextInputListener{
 		table.add(buttonAdd).expandX().pad(10);
 		table.add(buttonRemove).expandX().pad(10);
 		table.add(buttonMenu).expandX().pad(10);
+		table.add(buttonPesq).expandX().pad(10);
 				
 		
 		stage.addActor(table);
@@ -178,19 +218,23 @@ public class ListaDEncHud implements Disposable, TextInputListener{
 	@Override
 	public void input(String text) {
 		int pos;
-		if( (elementos == 0) && (delete == false) ) {
+		if( (elementos == 0) && (delete == false) && (opcao == 0)) {
 			elementos++;
 			ListaDEncScreen.insereTela(1, text);
 		}
-		else if( (elementos > 0) && (delete == false) ) {
+		else if( (elementos > 0) && (delete == false) && (opcao == 0)) {
 			elementos++;
 			String entrada [] = text.split("-"); //------Exceção quando coloca errado
 			pos = Integer.parseInt(entrada[0]); //-------Exceção elemento diferente de numero
 			ListaDEncScreen.insereTela(pos, entrada[1]);
 		}
-		else if(delete == true) {
+		else if((delete == true) && (opcao == 0)) {
 			ListaDEncScreen.removeTela(Integer.parseInt(text)); //------Exceção quando coloca diferente de numero
 			delete = false;
+		}
+		if(opcao == 1){
+			ListaDEncScreen.Pesquisa(text);
+			opcao = 0;
 		}
 	}
 

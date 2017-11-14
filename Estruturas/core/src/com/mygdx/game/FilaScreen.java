@@ -41,6 +41,7 @@ public class FilaScreen implements Screen, TextInputListener{
 	 static BitmapFont font[];
 	 static BitmapFont font2[];
 	 static String[] conteudoInvert;
+	 static String pesquisa;
 	 static int aux = 0;
 
 	/*
@@ -116,7 +117,7 @@ public class FilaScreen implements Screen, TextInputListener{
 				game.balde.draw(image(i), -640 + 35 +( 128 * (i - 1)), 0); //----
 				font2[i].draw(game.balde, String.valueOf(i +"*"), -605 + 128 * (i - 1),	110);
 			}
-		if(posRabo != 0) { 
+		if(posRabo != 0){ 
 			game.balde.draw(rabo, -640 + (128 * (posRabo - 1)), -180);
 			for(int i = 0; i <= 20; i++) {
 				try {
@@ -129,6 +130,20 @@ public class FilaScreen implements Screen, TextInputListener{
 			}
 			}
 		}
+		for(int i = 0; i <= 21; i++) {
+		//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
+		//	se for 	igual alteramos a cor da fonte
+			try {
+		if(pesquisa.equals(conteudoInvert[i])) {
+			font[i + 1].setColor(Color.valueOf("7fff00"));
+		}else {
+			font[i + 1].setColor(Color.valueOf("b7b7b7"));
+		}
+			}catch (Exception f) {
+			
+		}
+		}
+		
 		/*for(int i = 0; i < 50; i++) {			
 			game.balde.draw(setas[i], -640 + (32 * (i + 1) - 16), 0); 
 		}*/
@@ -240,9 +255,9 @@ public class FilaScreen implements Screen, TextInputListener{
 		try		
 		{	
 			//Gera exceção caso o usuário tente passar o número de elementos da pilha!
-			if((nElementos != 0) && (aux == elementos)) {
-				throw new Exception();
-			}
+			//if((nElementos != 0) && (aux == elementos)) {
+				//throw new Exception();
+			//}
 			int n = Integer.parseInt(valor); //Caso não for um número gera a Exceção NumberFormatException
 			
 			insere(valor); //Inserimos na posição inicial um novo valor
@@ -278,7 +293,7 @@ public class FilaScreen implements Screen, TextInputListener{
 			} 
 			else
 			{
-				System.out.println(remove()); //Removemos o valor salvo na última posição
+				//System.out.println(remove()); //Removemos o valor salvo na última posição
 				//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario	
 				posRabo--;
 				aux--;
@@ -302,6 +317,11 @@ public class FilaScreen implements Screen, TextInputListener{
 		}
 	
 	  }
+		
+	//Esse metodo recebe um String de pesquisa
+	public static void Pesquisa(String text){
+		pesquisa = text;		
+	}
 	
 	/*
 	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
@@ -396,4 +416,7 @@ public class FilaScreen implements Screen, TextInputListener{
 	    public static Texture image(int pos) {
 	      	return quads[pos - 1];
 	    }
+
+
+		
 }

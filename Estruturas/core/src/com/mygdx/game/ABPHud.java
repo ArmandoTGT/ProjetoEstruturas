@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.graphics.Color;
@@ -22,8 +24,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class ListaSeqHud implements Disposable, TextInputListener{
-	int opcao, pos; //Nos ajudará na lógica de adicionar e remover
+public class ABPHud implements Disposable, TextInputListener{
+	private int elementos; //Nos ajudará na lógica de adicionar e remover
 	
 	public Stage stage;
 	private Viewport port;
@@ -46,14 +48,8 @@ public class ListaSeqHud implements Disposable, TextInputListener{
     Skin skinMenu;
     TextureAtlas buttonAtlasMenu;
     
-    TextButtonStyle textButtonStylePesq;
-    BitmapFont fontPesq;
-    Skin skinPesq;
-    TextureAtlas buttonAtlasPesq;
-    
 	
-	public ListaSeqHud(SpriteBatch sb, final Executor game) {
-		opcao = 0;
+	public ABPHud(SpriteBatch sb, final Executor game) {
 		
 		this.game = game;
 		
@@ -88,9 +84,7 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				//Adicionará o tamanho da estrutura
-				opcao = 0; //Permitirá adicionar
-				Gdx.input.getTextInput(ListaSeqHud.this, "Adicionar", "", "Posição-Conteudo");				
+					Gdx.input.getTextInput(ABPHud.this, "Adicionar", "", "Conteudo");
 				}	    	
 	     	});
 	     stage.addActor(buttonAdd);
@@ -119,8 +113,7 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					opcao = 1; //Permitirá excluir
-					Gdx.input.getTextInput(ListaSeqHud.this, "Remoção", "", "Posição");
+					
 				}    	 
 	     	});
 	     stage.addActor(buttonRemove);
@@ -154,38 +147,6 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 	     	});
 	     stage.addActor(buttonMenu);
 	     
-
-	     fontPesq = new BitmapFont();
-	     skinPesq = new Skin();
-	     buttonAtlasPesq = new TextureAtlas("Botões/RemoveImg.pack");
-	     skinPesq.addRegions(buttonAtlasPesq);
-	     textButtonStylePesq = new TextButtonStyle();
-	     textButtonStylePesq.font = fontPesq;
-	     textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
-	     textButtonStylePesq.down = skinPesq.getDrawable("RemoverPressionado");
-	     textButtonStylePesq.checked = skinPesq.getDrawable("RemoverNormal");
-	     Button buttonPesq = new TextButton(" ", textButtonStylePesq);
-	     buttonPesq.addListener(new ClickListener() {	    	 
-	    	 	@Override
-				public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-	    		 textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
-					super.exit(event, x, y, pointer, toActor);
-				}
-				@Override
-				public boolean mouseMoved(InputEvent event, float x, float y) {
-					textButtonStylePesq.up = skinPesq.getDrawable("RemoverSelecionado");
-					return super.mouseMoved(event, x, y);
-				}
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					super.clicked(event, x, y);
-					opcao = 2;
-					Gdx.input.getTextInput(ListaSeqHud.this, "Pesquisar", "", "Conteudo");
-					
-				}    	 
-	     	});
-	     stage.addActor(buttonPesq);
-	     
 	     
 		Table table = new Table();
 		table.top();
@@ -194,7 +155,6 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 		table.add(buttonAdd).expandX().pad(10);
 		table.add(buttonRemove).expandX().pad(10);
 		table.add(buttonMenu).expandX().pad(10);
-		table.add(buttonPesq).expandX().pad(10);
 				
 		
 		stage.addActor(table);
@@ -202,24 +162,13 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 	}
 	
 	/*
-	 * Vamos 
+	 * Aqui quando o usuário clicar pela primeira vez
+	 * ele adicionará automaticamente na posição 0,
+	 * quando for em alguma outra, ele adicionará nas posições subsequentes
 	 */
 	@Override
 	public void input(String text) {
-		int pos, valor;
-		if(opcao ==0) {
-			String entrada [] = text.split("-");
-			pos = Integer.parseInt(entrada[0]);
-			ListaSeqScreen.insereTela(pos, entrada[1]);
-		}
-		else if(opcao == 1) {
-			pos = Integer.parseInt(text);
-			ListaSeqScreen.removeTela(pos);
-		}
-		else if(opcao == 2) {
-			pos = Integer.parseInt(text);
-			ListaSeqScreen.Pesquisa(text);
-		}
+		ABPScreen.insereTela(Integer.parseInt(text));
 	}
 
 	@Override
