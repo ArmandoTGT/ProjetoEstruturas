@@ -15,8 +15,7 @@ public class Executor extends Game {
 	
 	public SpriteBatch balde;
 	
-	public MenuScreen MenuScreen;
-	public ListaSeqScreen MyScreen;
+	
 	
 	
 	@Override
@@ -33,6 +32,14 @@ public class Executor extends Game {
 	public void render () {
 		super.render();
 	}
+
+	@Override
+	public void dispose() {
+
+		balde.dispose();
+		super.dispose();
+	}
+	
 	
 	
 }

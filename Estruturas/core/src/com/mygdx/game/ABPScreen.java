@@ -27,8 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ABPScreen implements Screen{
 	
-	private static Executor game;
-	private static Random posicao; 
+	private static Executor game;	 
 	private static int posicaoAux;
 	private OrthographicCamera camera;
 	private Viewport port;
@@ -48,13 +47,14 @@ public class ABPScreen implements Screen{
 	static BitmapFont font;
 	static BitmapFont font2;
 	static int cont;
+	static String pesquisa;
 	/*
 	 * Todos os textures precisam ser construidos
 	 * apenas, e somente apenas, no construtor
 	 */
 	public ABPScreen(Executor game){
-		posicao = new Random();
 		
+		indice = 0;
 		cont = 0;
 		nos = new NoABP[20];
 		
@@ -115,6 +115,15 @@ public class ABPScreen implements Screen{
 			arvore.raiz().setY(150);
 			
 			game.balde.draw(arvore.raiz().getQuad(), arvore.raiz().getX(), arvore.raiz().getY());
+			try {
+				if(pesquisa.equals(String.valueOf(arvore.raiz().getConteudo()))){
+					font.setColor(Color.valueOf("7fff00"));
+				}else{
+					font.setColor(Color.valueOf("b7b7b7"));
+				}
+				}catch(Exception f){
+					
+				}
 			font.draw(game.balde, String.valueOf(arvore.raiz().getConteudo()), arvore.raiz().getX() + 50,	arvore.raiz().getY() + 70);
 			
 		}
@@ -124,22 +133,54 @@ public class ABPScreen implements Screen{
 				try {
 					
 				if(nos[i].getDirecao() ==  1)	{//Direita
-					//System.out.println(arvore.busca(insereAux[i]).getPai().getConteudo());
+						
+					//if(indice == 2) {
+					//game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 ,
+						//arvore.busca(insereAux[i]).getPai().getY() -150 );
+					//arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 );
+					//}else{
 					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 ,
 							arvore.busca(insereAux[i]).getPai().getY() -150 );
 					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 );
+					//}
 					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
+					
+					try {
+						if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
+							font.setColor(Color.valueOf("7fff00"));
+						}else{
+							font.setColor(Color.valueOf("b7b7b7"));
+						}
+						}catch(Exception f){
+							
+						}
 					font.draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()), 
 							arvore.busca(insereAux[i]).getX() + 50,	arvore.busca(insereAux[i]).getY() + 70);
+					indice = 1;	
 				}
 				else if(nos[i].getDirecao() == 2) {//Esquerda
-					//System.out.println(arvore.busca(insereAux[i]).getPai().getConteudo());
+					//if(indice == 2) {
+					//game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150,
+					//		arvore.busca(insereAux[i]).getPai().getY() -150);
+					//}else {
 					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150,
 							arvore.busca(insereAux[i]).getPai().getY() -150);
-					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() -150 );
+						arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() -150 );
+					//}
 					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
+					
+					try {
+						if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
+							font.setColor(Color.valueOf("7fff00"));
+						}else{
+							font.setColor(Color.valueOf("b7b7b7"));
+						}
+						}catch(Exception f){
+							
+						}
 					font.draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()),
 							arvore.busca(insereAux[i]).getX() + 50, arvore.busca(insereAux[i]).getY() + 70);
+					indice = 2;	
 				}
 			}catch(Exception e) {
 				/*game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
@@ -218,6 +259,13 @@ public class ABPScreen implements Screen{
 
 	
 	public void dispose() {
+		setaDireita.dispose();
+		setaEsquerda.dispose();
+		raiz.dispose();
+		quadValido.dispose();
+		fundo.dispose();
+		font.dispose();
+		font2.dispose();
 		
 		
 	}
@@ -253,4 +301,10 @@ public class ABPScreen implements Screen{
 		}				
 	}
 	*/
+
+
+	public static void Pesquisa(String text) {
+		pesquisa = text;
+		
+	}
 }

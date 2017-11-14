@@ -10,7 +10,17 @@ class NoABP {
 	private int direcao;
 	private NoABP pai;
 	private int x, y;
+	private int profundidade;
 	
+	
+	public int getProfundidade() {
+		return profundidade;
+	}
+
+	public void setProfundidade(int profundidade) {
+		this.profundidade = profundidade;
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -171,6 +181,7 @@ public class ABP{
 		if (raiz == null){ // Arvore vazia
 			novoNo.setPai(null);
 			novoNo.setDirecao(0);
+			novoNo.setProfundidade(0);
 			novoNo.setQuad(quadRaiz);
 	 		raiz = novoNo;
 			return;
@@ -191,15 +202,25 @@ public class ABP{
 		dad = p;
 		// Encontrou um no folha para inserir
 		if (valor < p.getConteudo()) {
-			System.out.println("Entrou aqui");
+			//Primeiro vamos definir a profundidade em que estará esse filho
+			int profundidadePai = p.getProfundidade();
+			profundidadePai++;
+			novoNo.setProfundidade(profundidadePai);
+			//Agora a sua direção e quadrado correspondente
 			novoNo.setDirecao(2);
 			novoNo.setQuad(quadEsquerda); //Se o nó for colocado aqui, significa que ele está a esquerda
+			//Finalmente o novoNo está preparado para ser inserido na arvore
 			p.setEsq(novoNo);
 		}
 		else {
-			System.out.println("Entrou aqui");
+			//Primeiro vamos definir a profundidade em que estará esse filho
+			int profundidadePai = p.getProfundidade();
+			profundidadePai++;
+			novoNo.setProfundidade(profundidadePai);
+			//Agora a sua direção e quadrado correspondente
 			novoNo.setDirecao(1);
 			novoNo.setQuad(quadDireita); //Se o nó for colocado aqui, significa que ele está a direita
+			//Finalmente o novoNo está preparado para ser inserido na arvore
 			p.setDir(novoNo);
 		}
 		ultimoNo = novoNo;
