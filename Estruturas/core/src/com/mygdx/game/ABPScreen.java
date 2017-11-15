@@ -47,6 +47,7 @@ public class ABPScreen implements Screen{
 	static BitmapFont font;
 	static BitmapFont font2;
 	static int cont;
+	static int menos[];
 	static String pesquisa;
 	/*
 	 * Todos os textures precisam ser construidos
@@ -55,6 +56,7 @@ public class ABPScreen implements Screen{
 	public ABPScreen(Executor game){
 		
 		indice = 0;
+		menos = new int [20];
 		cont = 0;
 		nos = new NoABP[20];
 		
@@ -139,9 +141,9 @@ public class ABPScreen implements Screen{
 						//arvore.busca(insereAux[i]).getPai().getY() -150 );
 					//arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 );
 					//}else{
-					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 ,
+					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) + menos[i],
 							arvore.busca(insereAux[i]).getPai().getY() -150 );
-					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 );
+					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) + menos[i] );
 					//}
 					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
 					
@@ -163,9 +165,9 @@ public class ABPScreen implements Screen{
 					//game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150,
 					//		arvore.busca(insereAux[i]).getPai().getY() -150);
 					//}else {
-					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150,
-							arvore.busca(insereAux[i]).getPai().getY() -150);
-						arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() -150 );
+					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) - menos[i],
+							arvore.busca(insereAux[i]).getPai().getY() -150 );
+						arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() -150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) - menos[i]);
 					//}
 					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
 					
@@ -193,6 +195,31 @@ public class ABPScreen implements Screen{
 		hud.stage.act(delta);
 		hud.stage.draw();
 	}
+	
+	private int contaD(int prof, int i) {
+		
+		if(prof == 0) {
+			return 0;
+		}
+		if(prof == 1) {
+			return 4;
+		}
+		if(prof == 2) {
+			return 2;
+		}
+		if(prof == 3) {
+			return 1;
+		}
+		if(prof == 4) {
+			menos[i] = 50;
+			return 1;			
+		}
+		
+		else {
+			return 1;
+		}
+		
+	}
 
 	
 	private void moveCamera(float dt) {
@@ -207,7 +234,7 @@ public class ABPScreen implements Screen{
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			camera.zoom += 0.02;
-			if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
+			//if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
 		}
 		if (Gdx.input.isKeyPressed(Keys.Q)) {
 			camera.zoom -= 0.02;			
@@ -217,19 +244,19 @@ public class ABPScreen implements Screen{
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
 			camera.position.x -= 1000 * dt;			
-			if(camera.position.x < -616.67914)camera.position.x = (float) -616.67914;
+			//if(camera.position.x < -616.67914)camera.position.x = (float) -616.67914;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
 			camera.position.x += 1000 * dt;
-			if(camera.position.x > 6326.621)camera.position.x = (float) 6326.621;
+			//if(camera.position.x > 6326.621)camera.position.x = (float) 6326.621;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.UP) ){
 			camera.position.y += 1000 * dt;			
-			if(camera.position.y > 2267.0886)camera.position.y = (float) 2267.0886;
+			//if(camera.position.y > 2267.0886)camera.position.y = (float) 2267.0886;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.DOWN) ){
 			camera.position.y -= 1000 * dt;				
-			if(camera.position.y < -183.99722)camera.position.y = (float) -183.99722;
+			//if(camera.position.y < -183.99722)camera.position.y = (float) -183.99722;
 		}
 		
 	}
