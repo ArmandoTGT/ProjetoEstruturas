@@ -13,6 +13,7 @@ class NoABP {
 	private int profundidade;
 	
 	
+	
 	public int getProfundidade() {
 		return profundidade;
 	}
@@ -109,8 +110,14 @@ public class ABP{
 	private Texture quadDireita;
 	public NoABP ultimoNo;
 	public NoABP dad;
+	public int tent[];
+	public int cont;
+	public boolean pesquisou;
 	
 	public ABP(Texture quadRaiz, Texture quadDireita, Texture quadEsquerda){
+		pesquisou = false;
+		cont = 0;
+		tent = new int[20];
 		tamanho = 0;
 		raiz = null;
 		this.quadRaiz = quadRaiz; //Vai definir o texture quando ele está na raiz
@@ -123,16 +130,38 @@ public class ABP{
 		return (raiz == null);
 	}
 	
+	
+	private NoABP buscaPesq(NoABP T, int valor) {
+	
+		if (T == null)
+			return null;  // Arvore Vazia
+		
+		tent[cont] = T.getConteudo();
+		cont++;
+		
+		
+		if(T.getConteudo() == valor) {
+			
+			return T; 	// Ele vem encontrado na raiz
+		}
+		if (valor < T.getConteudo())
+			return buscaPesq(T.getEsq(), valor);
+	    else
+			return buscaPesq(T.getDir(), valor);
+	}
+	
+	
 	/**Buscar recursivamente a partir da raiz.
 	    Retorna o endereço se o elemento for
 	    encontrado, caso contrario retorna NULL*/
 	private NoABP busca(NoABP T, int valor) {
+		
 		if (T == null)
 			return null;  // Arvore Vazia
-
-		if(T.getConteudo() == valor)
-			return T; 	// Ele vem encontrado na raiz
 		
+		if(T.getConteudo() == valor) {			
+			return T; 	// Ele vem encontrado na raiz
+		}
 		if (valor < T.getConteudo())
 			return busca(T.getEsq(), valor);
 	    else
@@ -148,6 +177,14 @@ public class ABP{
 		
 		return null;
 	}
+	
+	public NoABP buscaPesq(int valor) {          
+		if (raiz != null) 
+			return buscaPesq(raiz, valor);
+		
+		return null;
+	}
+	
 	
 
 	/**Exibe o conteudo de uma arvore no formato in-ordem

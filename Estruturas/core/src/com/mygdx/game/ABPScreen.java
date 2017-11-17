@@ -7,6 +7,8 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import org.omg.CORBA.portable.ValueOutputStream;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
@@ -21,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -34,7 +37,7 @@ public class ABPScreen implements Screen{
 	private ABPHud hud;
 	private Texture fundo;
 	//Atributos relacionados a construção gráfica da arvore
-	private static ABP arvore;
+	static ABP arvore;
 	static Texture quadValido;
 	static Texture setaDireita;
 	static Texture setaEsquerda;
@@ -119,19 +122,11 @@ public class ABPScreen implements Screen{
 			arvore.raiz().setY(150);
 			
 			game.balde.draw(arvore.raiz().getQuad(), arvore.raiz().getX(), arvore.raiz().getY());
-			//try {
-				//if(pesquisa.equals(String.valueOf(arvore.raiz().getConteudo()))){
-					//font.setColor(Color.valueOf("7fff00"));
-				//}else{
-					//font.setColor(Color.valueOf("b7b7b7"));
-		//		}
-			//	}catch(Exception f){
-					
-			//	}
+			
 			font[0].draw(game.balde, String.valueOf(arvore.raiz().getConteudo()), arvore.raiz().getX() + 50,	arvore.raiz().getY() + 70);
 			
 		}
-		for(int i = 0; i < arvore.tamanho(); i++) {
+		for(int i = 1; i <= arvore.tamanho(); i++) {
 			
 			
 				try {
@@ -145,15 +140,7 @@ public class ABPScreen implements Screen{
 				
 					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
 					
-					/*try {
-						if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
-							font[i].setColor(Color.valueOf("7fff00"));
-						}else{
-							font[i].setColor(Color.valueOf("b7b7b7"));
-						}
-						}catch(Exception f){
-							
-						}*/
+					
 					font[i].draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()), 
 							arvore.busca(insereAux[i]).getX() + 50,	arvore.busca(insereAux[i]).getY() + 70);
 					indice = 1;	
@@ -298,18 +285,44 @@ public class ABPScreen implements Screen{
 
 	public static void Pesquisa(String text) {
 		pesquisa = text;
-		for(int i = 0; i <= arvore.tamanho(); i++){
-		try {
-			if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
-				font[i].setColor(Color.valueOf("7fff00"));
-			}else{
-				font[i].setColor(Color.valueOf("7fff00"));
-				Thread.sleep(1000);
-				font[i].setColor(Color.valueOf("b7b7b7"));
-			}
-			}catch(Exception f){
+		arvore.buscaPesq(Integer.parseInt(text));
 				
-			}
+		for(int i = 0; i <= 20; i++) {
+			font[i].setColor(Color.valueOf("b7b7b7"));
 		}
+			
+		try {
+			for(int i = 0; i < arvore.cont; i++){
+			for(int j = 0; j <= arvore.tamanho(); j++) {
+			if(arvore.busca(arvore.tent[i]).getConteudo() == arvore.busca(insereAux[j]).getConteudo()) {
+				font[j].setColor(Color.valueOf("7fff00"));
+				Thread.sleep(1000);
+				font[j].setColor(Color.valueOf("b7b7b7"));
+				break;
+			}
+			}
+			
+			}
+			
+			}catch(Exception f){
+			
+			}
+		try {
+			for(int i = 0; i <= arvore.tamanho(); i++) {
+				if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
+					font[i].setColor(Color.valueOf("7fff00"));					
+					break;
+				}
+			}
+		}catch(Exception g){
+			
+		}
+		arvore.cont = 0;
+		for(int i = 0; i < 20; i++){
+			arvore.tent[i] = 0;
+		}
+		
+		
+		
 	}
 }
