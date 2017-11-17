@@ -225,6 +225,20 @@ public class PilhaHud implements Disposable, TextInputListener{
 	
 	public void dispose() {
 		stage.dispose();
+		fontAdd.dispose();
+		fontRemove.dispose();
+		fontMenu.dispose();
+		fontPesq.dispose();
+		skinRemove.dispose();
+		skinMenu.dispose();
+		skinPesq.dispose();
+		skinAdd.dispose();
+		buttonAtlasAdd.dispose();
+		buttonAtlasRemove.dispose();
+		buttonAtlasMenu.dispose();
+		buttonAtlasPesq.dispose();
+		
+		
 		
 	}
 

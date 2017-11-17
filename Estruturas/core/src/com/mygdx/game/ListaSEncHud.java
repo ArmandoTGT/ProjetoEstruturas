@@ -228,7 +228,7 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 			elementos++;
 			ListaSEncScreen.insereTela(1, text);
 		}
-		else if( (elementos > 0) && (delete == false) && (opcao == 0)) {
+		if( (elementos > 0) && (delete == false) && (opcao == 0)) {
 			elementos++;
 			String entrada[] = text.split("-"); //------Exceção quando coloca errado
 			pos = Integer.parseInt(entrada[0]); //-------Exceção elemento diferente de numero
@@ -239,12 +239,13 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 			
 			}
 		}
-		else if(delete == true && (Integer.parseInt(text) <= elementos) && (opcao == 0)) {
+		if(delete == true && (Integer.parseInt(text) <= elementos) && (opcao == 0)) {
 			ListaSEncScreen.removeTela(Integer.parseInt(text)); //------Exceção quando coloca diferente de numero
 			delete = false;
 			elementos--; //Permitirá excluir
 		}
 		if(opcao == 1) {
+			elementos++;
 			ListaSEncScreen.Pesquisa(text);
 			opcao = 0;
 		}
@@ -257,6 +258,22 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 	
 	public void dispose() {
 		stage.dispose();
+		skinAdd.dispose();
+		buttonAtlasAdd.dispose();
+		fontAdd.dispose();
+		
+		skinRemove.dispose();
+		buttonAtlasRemove.dispose();
+		fontRemove.dispose();
+		
+		skinMenu.dispose();
+		buttonAtlasMenu.dispose();
+		fontMenu.dispose();
+		
+		skinPesq.dispose();
+		buttonAtlasPesq.dispose();
+		fontPesq.dispose();
+		
 		
 	}
 

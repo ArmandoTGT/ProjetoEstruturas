@@ -112,13 +112,13 @@ public class FilaScreen implements Screen, TextInputListener{
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		game.balde.draw(fundo, -1980, -1020);
-		game.balde.draw(cabeca, -640, 120);
+		game.balde.draw(rabo, -640, -180);
 		for(int i = 1; i <= elementos; i++) {
 				game.balde.draw(image(i), -640 + 35 +( 128 * (i - 1)), 0); //----
 				font2[i].draw(game.balde, String.valueOf(i +"*"), -605 + 128 * (i - 1),	110);
 			}
 		if(posRabo != 0){ 
-			game.balde.draw(rabo, -640 + (128 * (posRabo - 1)), -180);
+			game.balde.draw(cabeca, -640 + (128 * (posRabo - 1)), 120);
 			for(int i = 0; i <= 20; i++) {
 				try {
 									
@@ -130,7 +130,7 @@ public class FilaScreen implements Screen, TextInputListener{
 			}
 			}
 		}
-		for(int i = 0; i <= 21; i++) {
+		/*for(int i = 0; i <= 21; i++) {
 		//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
 		//	se for 	igual alteramos a cor da fonte
 			try {
@@ -220,6 +220,16 @@ public class FilaScreen implements Screen, TextInputListener{
 	
 	public void dispose() {
 		
+		
+		cabeca.dispose();
+		rabo.dispose();
+		quadVazio.dispose();
+		quadValido.dispose();
+		fundo.dispose();
+		for(int i = 0; i <= 20; i++){
+		font[i].dispose();		
+		font2[i].dispose();
+		}
 		
 	}
 
@@ -320,7 +330,37 @@ public class FilaScreen implements Screen, TextInputListener{
 		
 	//Esse metodo recebe um String de pesquisa
 	public static void Pesquisa(String text){
-		pesquisa = text;		
+		pesquisa = text;	
+			
+		try{
+			for(int i = 0; i <= 21; i++){				
+				if(pesquisa.equals(conteudo[i])){
+					
+				}
+				
+				else{				
+				font[i + 1].setColor(Color.valueOf("b7b7b7"));
+				}				
+			}
+			}catch(Exception g){				
+			}
+		
+		for(int i = 0; i <= 21; i++) {
+			//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
+			//	se for 	igual alteramos a cor da fonte
+				try {
+			if(pesquisa.equals(conteudo[i])) {				
+				font[i + 1].setColor(Color.valueOf("7fff00"));			
+				break;
+			}else {
+				font[i + 1].setColor(Color.valueOf("7fff00"));				
+				Thread.sleep(1000);
+				font[i + 1].setColor(Color.valueOf("b7b7b7"));				
+			}
+				}catch (Exception f){				
+			}
+			}
+		
 	}
 	
 	/*

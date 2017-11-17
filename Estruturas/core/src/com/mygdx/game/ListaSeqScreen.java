@@ -221,9 +221,15 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	}
 
 	
-	public void dispose() {
+	public void dispose() {		
 		
-		
+		quadVazio.dispose();
+		quadValido.dispose();
+		fundo.dispose();
+		for(int i = 0; i <= 20; i++){
+		font[i].dispose();
+		font2[i].dispose();
+		}
 	}
 
 	@Override

@@ -368,7 +368,34 @@ public class MenuScreen implements Screen{
 	}
 	
 	public void dispose() {
+		fontSair.dispose();
+		fontLseq.dispose();
+		fontLSE.dispose();
+		fontLDE.dispose();
+		fontLDE.dispose();
+		fontFila.dispose();
+		fontPilha.dispose();
+		fontABP.dispose();
 		
+		skinSair.dispose();
+		skinLseq.dispose();
+		skinLSE.dispose();
+		skinLDE.dispose();
+		skinFila.dispose();
+		skinPilha.dispose();
+		skinABP.dispose();
+		
+		buttonAtlasSair.dispose();
+		buttonAtlasLseq.dispose();
+		buttonAtlasLSE.dispose();
+		buttonAtlasLDE.dispose();
+		buttonAtlasFila.dispose();
+		buttonAtlasPilha.dispose();
+		buttonAtlasABP.dispose();
+		
+		fundo.dispose();
+		stage.dispose();
+
 		
 	}
 	

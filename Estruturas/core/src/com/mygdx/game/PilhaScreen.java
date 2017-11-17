@@ -42,6 +42,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 	static String[] conteudoInvert;
 	static int aux = 0;
 	static String pesquisa;
+	static boolean pesquisou;
 	
 
 	/*
@@ -58,6 +59,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 		conteudo = new String[21];
 		posi = new int[21];
 		conteudoInvert = new String[21];
+		pesquisou = false;
 
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
@@ -131,8 +133,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 			if(posRabo != 0) {
 				game.balde.draw(cabeca, -285, -369 + 129 * (posRabo - 1));
 				for(int i = 0; i <= 20; i++) {
-					try {
-										
+					try {					
 				font[posi[i]].draw(game.balde, conteudo[i], -2,	-300 + 129 * (posi[i] - 1));
 				
 				}
@@ -142,20 +143,6 @@ public class PilhaScreen implements Screen, TextInputListener{
 				}
 			}
 			
-			for(int i = 0; i <= 21; i++) {
-				//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
-				//	se for 	igual alteramos a cor da fonte
-					try {
-				if(pesquisa.equals(conteudo[i])) {
-					font[i + 1].setColor(Color.valueOf("7fff00"));
-				}else {
-					font[i + 1].setColor(Color.valueOf("b7b7b7"));
-				}
-					}catch (Exception f){
-					
-				}
-				}
-		
 		game.balde.end();
 		hud.stage.act(delta);
 		hud.stage.draw();
@@ -228,6 +215,15 @@ public class PilhaScreen implements Screen, TextInputListener{
 
 	
 	public void dispose() {
+		cabeca.dispose();
+		quadVazio.dispose();
+		quadValido.dispose();
+		fundo.dispose();
+		for(int i = 0; i <= 20; i++){
+		font[i].dispose();
+		font2[i].dispose();
+		}
+		
 		
 		
 	}
@@ -318,8 +314,40 @@ public class PilhaScreen implements Screen, TextInputListener{
 	}
 	
 	public static void Pesquisa(String text){
-		pesquisa = text;		
-	}
+		pesquisa = text;
+		pesquisou = true;
+		try{
+			for(int i = 0; i <= 21; i++){				
+				if(pesquisa.equals(conteudo[i])){
+					
+				}
+				
+				else{				
+				font[i + 1].setColor(Color.valueOf("b7b7b7"));
+				}				
+			}
+			}catch(Exception g){				
+			}
+		
+		for(int i = 0; i <= 21; i++) {
+			//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
+			//	se for 	igual alteramos a cor da fonte
+				try {
+			if(pesquisa.equals(conteudo[i])) {				
+				font[i + 1].setColor(Color.valueOf("7fff00"));			
+				break;
+			}else {
+				font[i + 1].setColor(Color.valueOf("7fff00"));				
+				Thread.sleep(1000);
+				font[i + 1].setColor(Color.valueOf("b7b7b7"));				
+			}
+				}catch (Exception f){				
+			}
+			}
+		
+		}
+		
+	
 	
 	
 	/*

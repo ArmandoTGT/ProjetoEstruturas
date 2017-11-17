@@ -44,7 +44,7 @@ public class ABPScreen implements Screen{
 	private static NoABP nos[];
 	
 	//Atributos relacionados a construção a fonte
-	static BitmapFont font;
+	static BitmapFont font[];
 	static BitmapFont font2;
 	static int cont;
 	static int menos[];
@@ -72,9 +72,11 @@ public class ABPScreen implements Screen{
 		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		  parameter.size = 20;		  
-		  font = new BitmapFont();					 
-		  font = generator.generateFont(parameter);	
-		  font.setColor(Color.valueOf("b7b7b7"));		  
+		  font = new BitmapFont[21];
+		  for(int i = 0; i <= 20; i++) {				 
+		  font[i] = generator.generateFont(parameter);	
+		  font[i].setColor(Color.valueOf("b7b7b7"));		  
+		  }
 		  generator.dispose();
 		  
 		  FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
@@ -117,16 +119,16 @@ public class ABPScreen implements Screen{
 			arvore.raiz().setY(150);
 			
 			game.balde.draw(arvore.raiz().getQuad(), arvore.raiz().getX(), arvore.raiz().getY());
-			try {
-				if(pesquisa.equals(String.valueOf(arvore.raiz().getConteudo()))){
-					font.setColor(Color.valueOf("7fff00"));
-				}else{
-					font.setColor(Color.valueOf("b7b7b7"));
-				}
-				}catch(Exception f){
+			//try {
+				//if(pesquisa.equals(String.valueOf(arvore.raiz().getConteudo()))){
+					//font.setColor(Color.valueOf("7fff00"));
+				//}else{
+					//font.setColor(Color.valueOf("b7b7b7"));
+		//		}
+			//	}catch(Exception f){
 					
-				}
-			font.draw(game.balde, String.valueOf(arvore.raiz().getConteudo()), arvore.raiz().getX() + 50,	arvore.raiz().getY() + 70);
+			//	}
+			font[0].draw(game.balde, String.valueOf(arvore.raiz().getConteudo()), arvore.raiz().getX() + 50,	arvore.raiz().getY() + 70);
 			
 		}
 		for(int i = 0; i < arvore.tamanho(); i++) {
@@ -136,59 +138,41 @@ public class ABPScreen implements Screen{
 					
 				if(nos[i].getDirecao() ==  1)	{//Direita
 						
-					//if(indice == 2) {
-					//game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 ,
-						//arvore.busca(insereAux[i]).getPai().getY() -150 );
-					//arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 );
-					//}else{
+					
 					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) + menos[i],
 							arvore.busca(insereAux[i]).getPai().getY() -150 );
 					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) + menos[i] );
-					//}
+				
 					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
 					
-					try {
+					/*try {
 						if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
-							font.setColor(Color.valueOf("7fff00"));
+							font[i].setColor(Color.valueOf("7fff00"));
 						}else{
-							font.setColor(Color.valueOf("b7b7b7"));
+							font[i].setColor(Color.valueOf("b7b7b7"));
 						}
 						}catch(Exception f){
 							
-						}
-					font.draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()), 
+						}*/
+					font[i].draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()), 
 							arvore.busca(insereAux[i]).getX() + 50,	arvore.busca(insereAux[i]).getY() + 70);
 					indice = 1;	
 				}
 				else if(nos[i].getDirecao() == 2) {//Esquerda
-					//if(indice == 2) {
-					//game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150,
-					//		arvore.busca(insereAux[i]).getPai().getY() -150);
-					//}else {
+					
 					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() -150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) - menos[i],
 							arvore.busca(insereAux[i]).getPai().getY() -150 );
 						arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() -150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) - menos[i]);
-					//}
+					
 					arvore.busca(insereAux[i]).setY(arvore.busca(insereAux[i]).getPai().getY() -150 );
 					
-					try {
-						if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
-							font.setColor(Color.valueOf("7fff00"));
-						}else{
-							font.setColor(Color.valueOf("b7b7b7"));
-						}
-						}catch(Exception f){
-							
-						}
-					font.draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()),
+					
+					font[i].draw(game.balde, String.valueOf(arvore.busca(insereAux[i]).getConteudo()),
 							arvore.busca(insereAux[i]).getX() + 50, arvore.busca(insereAux[i]).getY() + 70);
 					indice = 2;	
 				}
 			}catch(Exception e) {
-				/*game.balde.draw(lista.imagem(i), -640 + 120 + 320 * (i - 1), 0); //----
-				game.balde.draw(setaDireita, -640 + 120 + (128 * i) + (192 * (i -1)), 0);
-				font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
-				font2.draw(game.balde, String.valueOf(i+"*"), -690 + 128 + 45 + (320 * (i - 1)),	115);*/
+				
 				} 
 		}
 		game.balde.end();
@@ -291,7 +275,9 @@ public class ABPScreen implements Screen{
 		raiz.dispose();
 		quadValido.dispose();
 		fundo.dispose();
-		font.dispose();
+		for(int i = 0; i <= 20; i++){
+		font[i].dispose();
+		}
 		font2.dispose();
 		
 		
@@ -307,31 +293,23 @@ public class ABPScreen implements Screen{
 		
 		cont++;
 	}
-	/*
-	public static void removeTela(int pos) {
-		try {
-			Object j = lista.remove(pos);
-			if(j == null) {
-				throw new Exception();
-			}
-			else
-			{
-				posRabo--;
-				aux--;
-			}
-		} 
-		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
-										  "Error", ERROR_MESSAGE);
-
-			game.setScreen(new ABPScreen(game));
-		}				
-	}
-	*/
+	
 
 
 	public static void Pesquisa(String text) {
 		pesquisa = text;
-		
+		for(int i = 0; i <= arvore.tamanho(); i++){
+		try {
+			if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
+				font[i].setColor(Color.valueOf("7fff00"));
+			}else{
+				font[i].setColor(Color.valueOf("7fff00"));
+				Thread.sleep(1000);
+				font[i].setColor(Color.valueOf("b7b7b7"));
+			}
+			}catch(Exception f){
+				
+			}
+		}
 	}
 }

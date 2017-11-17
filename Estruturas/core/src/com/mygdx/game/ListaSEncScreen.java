@@ -27,8 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ListaSEncScreen implements Screen{
 	
-	private static Executor game;
-	private static Random posicao; //Como java aloca onde na memória será salvo, o random representará essa aleatoriedade
+	private static Executor game;	
 	private static int posicaoAux;
 	private OrthographicCamera camera;
 	private Viewport port;
@@ -40,31 +39,36 @@ public class ListaSEncScreen implements Screen{
 	static Texture setaDireita;
 	static Texture cabeca;
 	private static int posRabo;
-	static BitmapFont font;
+	static BitmapFont font[];
 	static BitmapFont font2;
 	static int aux = 1;
 	static String pesquisa;
-
+	static boolean pesquisou;
+ 
 	/*
 	 * Todos os textures precisam ser construidos
 	 * apenas, e somente apenas, no construtor
 	 */
 	public ListaSEncScreen(Executor game){
-		posicao = new Random();
+		
 		posRabo = 0;
 		posicaoAux = 0;
 		quadValido = new Texture("coisa/BlocoEncadeado.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
 		setaDireita = new Texture("coisa/setaDireita.png");
-		cabeca = new Texture("coisa/PonteiroCabeça.png");		
+		cabeca = new Texture("coisa/PonteiroCabeça.png");
+		pesquisou = false;
 		
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
 		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		  parameter.size = 20;		  
-		  font = new BitmapFont();					 
-		  font = generator.generateFont(parameter);	
-		  font.setColor(Color.valueOf("b7b7b7"));		  
+		  font = new BitmapFont[21];					 
+		  for(int i = 0; i <= 20; i++) {
+				 
+				font[i] = generator.generateFont(parameter);
+				font[i].setColor(Color.valueOf("b7b7b7"));
+				  }	  
 		  generator.dispose();
 		  
 		  FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(caminho);
@@ -108,16 +112,8 @@ public class ListaSEncScreen implements Screen{
 						game.balde.draw(setaDireita, -640 + 120 + (128 * i) + (192 * (i -1)), 0);
 						//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
 						//se for igual alteramos a cor da fonte
-						try {
-						if(pesquisa.equals(String.valueOf(lista.elemento(i)))){
-							font.setColor(Color.valueOf("7fff00"));
-						}else{
-							font.setColor(Color.valueOf("b7b7b7"));
-						}
-						}catch(Exception f){
-							
-						}
-						font.draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
+						
+						font[i -1].draw(game.balde, String.valueOf(lista.elemento(i)), -640 + 128 + 45 + (320 * (i - 1)),	70);
 						font2.draw(game.balde, String.valueOf(i+"*"), -690 + 128 + 45 + (320 * (i - 1)),	115);
 				}
 		game.balde.end();
@@ -193,7 +189,15 @@ public class ListaSEncScreen implements Screen{
 	
 	public void dispose() {
 		
-		
+		setaDireita.dispose();
+		cabeca.dispose();
+		quadVazio.dispose();
+		quadValido.dispose();
+		fundo.dispose();
+		for(int i = 0; i <= 20; i++){
+		font[i].dispose();		
+		}
+		font2.dispose();
 	}
 	
 	/*
@@ -250,6 +254,40 @@ public class ListaSEncScreen implements Screen{
 
 
 	public static void Pesquisa(String text) {
-		pesquisa = text;		
+		pesquisa = text;	
+		pesquisou = true;
+		
+		try{
+			for(int i = 1; i <= lista.tamanho(); i++){				
+				if(pesquisa.equals(String.valueOf(lista.elemento(i)))){
+					
+				}
+				
+				else{				
+				font[i - 1].setColor(Color.valueOf("b7b7b7"));
+				}				
+			}
+			}catch(Exception g){				
+			}
+		
+			
+	
+		for(int j = 1; j <= lista.tamanho(); j++) {
+			try {
+			if(pesquisa.equals(String.valueOf(lista.elemento(j)))){
+				font[j - 1].setColor(Color.valueOf("7fff00"));
+				pesquisou = false;
+				break;
+			}else{							
+				font[j - 1].setColor(Color.valueOf("7fff00"));
+				Thread.sleep(1000);
+				font[j - 1].setColor(Color.valueOf("b7b7b7"));
 	}
+	}catch(Exception f){
+		
+	}
+		}
+
+	}
+	
 }
