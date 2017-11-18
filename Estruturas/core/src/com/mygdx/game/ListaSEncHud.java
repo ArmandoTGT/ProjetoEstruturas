@@ -164,6 +164,7 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
+					ListaSEncScreen.sair();
 					game.setScreen(new MenuScreen(game));
 				}    	 
 	     	});

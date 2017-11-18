@@ -148,6 +148,7 @@ public class FilaHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
+					FilaScreen.sair();
 					game.setScreen(new MenuScreen(game));
 				}    	 
 	     	});
@@ -223,24 +224,6 @@ public class FilaHud implements Disposable, TextInputListener{
 	
 	public void dispose() {
 		stage.dispose();
-		
-		stage.dispose();
-		skinAdd.dispose();
-		buttonAtlasAdd.dispose();
-		fontAdd.dispose();
-		
-		skinRemove.dispose();
-		buttonAtlasRemove.dispose();
-		fontRemove.dispose();
-		
-		skinMenu.dispose();
-		buttonAtlasMenu.dispose();
-		fontMenu.dispose();
-		
-		skinPesq.dispose();
-		buttonAtlasPesq.dispose();
-		fontPesq.dispose();
-		
 		
 	}
 

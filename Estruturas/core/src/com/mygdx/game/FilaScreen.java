@@ -34,25 +34,36 @@ public class FilaScreen implements Screen, TextInputListener{
 	private static int posRabo;
 	static Texture quadValido;
 	static Texture quadVazio;
-	static Texture cabeca;
-	static Texture rabo;
+	static Texture inicio;
+	static Texture fim;
+	static FilaSeq fila;
 	private static int posi[];
-	private static String[] conteudo;
 	 static BitmapFont font[];
 	 static BitmapFont font2[];
-	 static String[] conteudoInvert;
 	 static String pesquisa;
-	 static int aux = 0;
+	 public static boolean exit;
 
 	/*
 	 * Todos os textures precisam ser construidos
 	 * apenas, e somente apenas, no construtor
 	 */
 	public FilaScreen(Executor game){
+		
+		quadValido = new Texture("coisa/quadradoPreenchido.png");
+		quadVazio = new Texture("coisa/quadradoVazio.png");
+		inicio = new Texture("coisa/PonteiroInicio.png");
+		fim = new Texture("coisa/PonteiroFim.png");
+		Gdx.input.getTextInput(this, "Fila Sequencial", "", "Tamanho da estrutura");
+		camera = new OrthographicCamera();
+		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
+		this.game = game;
+		hud = new FilaHud(game.balde, game);
+		fundo = new Texture("coisa/FundoEstruturas.png");
+		
+		elementos = 0;
 		posRabo = 0;
-		conteudo = new String[21];
+		fila = new FilaSeq(quadValido, quadVazio);
 		posi = new int[21];
-		conteudoInvert = new String[21];
 		
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
@@ -80,20 +91,6 @@ public class FilaScreen implements Screen, TextInputListener{
 		  }
 		generator2.dispose(); 
 		
-		quadValido = new Texture("coisa/quadradoPreenchido.png");
-		quadVazio = new Texture("coisa/quadradoVazio.png");
-		cabeca = new Texture("coisa/PonteiroInicio.png");
-		rabo = new Texture("coisa/PonteiroFim.png");
-		Gdx.input.getTextInput(this, "Fila Sequencial", "", "Tamanho da estrutura");
-		FilaSeq();
-		camera = new OrthographicCamera();
-		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
-		this.game = game;
-		hud = new FilaHud(game.balde, game);
-		fundo = new Texture("coisa/FundoEstruturas.png");
-		elementos = 0;
-		
-		
 	}
 
 	
@@ -112,29 +109,33 @@ public class FilaScreen implements Screen, TextInputListener{
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		game.balde.draw(fundo, -1980, -1020);
-		game.balde.draw(rabo, -640, -180);
-		for(int i = 1; i <= elementos; i++) {
-				game.balde.draw(image(i), -640 + 35 +( 128 * (i - 1)), 0); //----
-				font2[i].draw(game.balde, String.valueOf(i +"*"), -605 + 128 * (i - 1),	110);
+		
+		if(exit) {
+			this.dispose();
+		}
+		
+		if(fila.fim() == -1) game.balde.draw(fim, -640, -180 ); //
+		else game.balde.draw(fim, -640 + (128 * (fila.fim())), -180 ); //Fim irá ir circulando a lista conforme a posição retornada da fila
+		for(int i = 0; i < elementos; i++) {
+			game.balde.draw(fila.imagem(i), -640 + 35 +( 128 * i), 0); //Imprime na tela os quadrados associados a pilha
+			font2[i].draw(game.balde, String.valueOf(i +"*"), -605 + 128 * i,	110); //Posições do array
 			}
-		if(posRabo != 0){ 
-			game.balde.draw(cabeca, -640 + (128 * (posRabo - 1)), 120);
-			for(int i = 0; i <= 20; i++) {
-				try {
-									
-			font[posi[i]].draw(game.balde, conteudoInvert[i -1], -675  + 129 * (posi[i]),	70);
+		game.balde.draw(inicio, -640 + (128 * fila.inicio()), 120);
+		for(int i = 0; i < elementos; i++) {
+			try {	
+				if(fila.escrito(i)){ //Só mostra o que tem escrito, se aquele espaço já não tiver sido apagado
+					font[posi[i]].draw(game.balde, fila.conteudo(i), -547  + 129 * (posi[i]), 70); 
+				}
 			
-			}
-			catch (Exception e) {
-			
-			}
+			}catch (Exception e) {
+				
 			}
 		}
-		/*for(int i = 0; i <= 21; i++) {
+		for(int i = 0; i <= 21; i++) {
 		//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
 		//	se for 	igual alteramos a cor da fonte
 			try {
-		if(pesquisa.equals(conteudoInvert[i])) {
+		if(pesquisa.equals(fila.conteudo(i))) {
 			font[i + 1].setColor(Color.valueOf("7fff00"));
 		}else {
 			font[i + 1].setColor(Color.valueOf("b7b7b7"));
@@ -219,10 +220,8 @@ public class FilaScreen implements Screen, TextInputListener{
 
 	
 	public void dispose() {
-		
-		
-		cabeca.dispose();
-		rabo.dispose();
+		inicio.dispose();
+		fim.dispose();
 		quadVazio.dispose();
 		quadValido.dispose();
 		fundo.dispose();
@@ -230,7 +229,10 @@ public class FilaScreen implements Screen, TextInputListener{
 		font[i].dispose();		
 		font2[i].dispose();
 		}
-		
+	}
+	
+	public static void sair() {
+		exit = true;		
 	}
 
 	@Override
@@ -238,7 +240,8 @@ public class FilaScreen implements Screen, TextInputListener{
 		try {
 			//Caso o resultado do isNumber() = true, ele confirma que o valor digitado está entre o padrão
 			if(isNumber(text)) {
-				elementos = Integer.parseInt(text);		
+				elementos = Integer.parseInt(text);
+				fila = new FilaSeq(elementos,quadValido, quadVazio);
 			}
 			else 
 			{
@@ -270,21 +273,11 @@ public class FilaScreen implements Screen, TextInputListener{
 			//}
 			int n = Integer.parseInt(valor); //Caso não for um número gera a Exceção NumberFormatException
 			
-			insere(valor); //Inserimos na posição inicial um novo valor
+			fila.insere(valor); //Inserimos na posição inicial um novo valor
 			//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
-			quads[posRabo] = quadValido;
+			
 			posRabo++;
-			aux++;
-			
 			posi[posRabo] = posRabo;
-			String[] aux1 = new String[21];
-			
-			conteudo[posRabo] = valor;
-			aux1 = conteudo;
-			for(int i = 0; i <= posRabo; i++) {
-				conteudoInvert[posRabo -i] = aux1[i];
-			
-			}
 		}
 		catch(NumberFormatException nf) {
 			JOptionPane.showMessageDialog(null, "Conteúdo apenas composto por números!", "Error", ERROR_MESSAGE);
@@ -298,31 +291,19 @@ public class FilaScreen implements Screen, TextInputListener{
 	public static void removeTela() {
 		
 		try {
-			if((remove() == "null") && (aux == 0)) {
-				throw new Exception();
+			String auxS = fila.remove();
+			if(auxS.equals("null")) {
+				throw new Exception(); //Essa exceção será lançada quando o usuário tentar excluir quando a fila ainda estiver vazia
 			} 
 			else
-			{
-				//System.out.println(remove()); //Removemos o valor salvo na última posição
-				//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario	
+			{			
 				posRabo--;
-				aux--;
-				quads[posRabo] = quadVazio;
 				posi[posRabo] = posRabo;
-				
-				String[] aux1 = new String[21];
-				conteudoInvert[posRabo] = null;
-				aux1 = conteudoInvert;
-				for(int i = 0; i <= posRabo; i++) {
-					conteudo[posRabo -i] = aux1[i];				
-				 }
-					
 			}
 		}
 		catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
 										  "Error", ERROR_MESSAGE);
-			
 			game.setScreen(new FilaScreen(game));
 		}
 	
@@ -330,37 +311,7 @@ public class FilaScreen implements Screen, TextInputListener{
 		
 	//Esse metodo recebe um String de pesquisa
 	public static void Pesquisa(String text){
-		pesquisa = text;	
-			
-		try{
-			for(int i = 0; i <= 21; i++){				
-				if(pesquisa.equals(conteudo[i])){
-					
-				}
-				
-				else{				
-				font[i + 1].setColor(Color.valueOf("b7b7b7"));
-				}				
-			}
-			}catch(Exception g){				
-			}
-		
-		for(int i = 0; i <= 21; i++) {
-			//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
-			//	se for 	igual alteramos a cor da fonte
-				try {
-			if(pesquisa.equals(conteudo[i])) {				
-				font[i + 1].setColor(Color.valueOf("7fff00"));			
-				break;
-			}else {
-				font[i + 1].setColor(Color.valueOf("7fff00"));				
-				Thread.sleep(1000);
-				font[i + 1].setColor(Color.valueOf("b7b7b7"));				
-			}
-				}catch (Exception f){				
-			}
-			}
-		
+		pesquisa = text;		
 	}
 	
 	/*
@@ -373,90 +324,5 @@ public class FilaScreen implements Screen, TextInputListener{
 		}
 			return true;
 	}
-	
-	//-------------------------------PILHA SEQUENCIAL-------------------------------------------------
-		private static String dados[];
-		private static int inicio;
-		private static int fim;
-		private static int nElementos;
-		private static int tamMax;
-		private static Texture[] quads;
-		
-		public static void FilaSeq() {
-			inicio = 0;
-			fim = -1;
-			nElementos = 0;
-			tamMax = 20;
-			dados =  new String[tamMax];
-			quads = new Texture[20];
-			for(int i = 0; i<20 ; i++) {
-	    		quads[i] = new Texture("coisa/quadradoVazio.png");
-	    	}
-		}
-
-		/** Verifica se a Fila estÃ¡ vazia */
-		public static boolean vazia () {
-			if (nElementos == 0)
-				return true;
-			else
-				return false;
-		}
-
-		/**Verifica se a Fila estÃ¡ cheia */
-		public static boolean cheia () {
-			if (nElementos == tamMax)
-				return true;
-			else
-				return false;
-		}
-
-		/** ObtÃ©m o tamanho da Fila */
-		public static int tamanho() {
-			return nElementos;
-		}
-
-		/** Consulta o elemento do inÃ­cio da fila.
-		    Retorna -1 se a fila estiver vazia. */
-		public static String primeiro() {
-			if (vazia())
-				return "null"; // Erro: Fila vazia 
-			
-			return dados[inicio];
-		}
-
-		/**Insere um elemento no fim de uma fila
-	    Retorna false se a fila estiver cheia, true caso contrÃ¡rio. */
-		public static boolean insere(String valor) {
-			if (cheia()){
-				return false;
-			}
-		
-			fim = (fim + 1) % tamMax; // Circularidade 
-		    dados[fim] = valor;
-			nElementos++;
-			return true;
-		}
-
-		/**Remove o elemento do inÃ­cio da fila e retorna o valor removido.
-		    Retorna -1 se a fila estiver vazia.*/
-		public static String remove() {
-			if (vazia())
-				return "null";
-		
-			String res = primeiro();
-			inicio = (inicio + 1) % tamMax; //Circularidade 
-			nElementos--;
-			return res;
-		}
-		
-	    /*
-	     * O método foi implementado para trabalhar graficamente com essa classe
-	     * basicamente retorna o texture atualmente salvo na posição designada
-	     */
-	    public static Texture image(int pos) {
-	      	return quads[pos - 1];
-	    }
-
-
 		
 }

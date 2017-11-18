@@ -45,6 +45,7 @@ public class ABPScreen implements Screen{
 	private static int raizAux, indice, x, y, insereAux[];
 	private static NoABP no;
 	private static NoABP nos[];
+	public static boolean exit;
 	
 	//Atributos relacionados a construção a fonte
 	static BitmapFont font[];
@@ -116,6 +117,11 @@ public class ABPScreen implements Screen{
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		game.balde.draw(fundo, -1980, -1020); 
+		
+		if(exit) {
+			this.dispose();
+		}
+		
 		if(!arvore.vazia()) {
 			
 			arvore.raiz().setX(-200);
@@ -268,6 +274,10 @@ public class ABPScreen implements Screen{
 		font2.dispose();
 		
 		
+	}
+	
+	public static void sair() {
+		exit = true;		
 	}
 	
 	public static void insereTela(int valor) {

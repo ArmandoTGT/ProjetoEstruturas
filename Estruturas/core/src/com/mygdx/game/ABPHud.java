@@ -39,11 +39,6 @@ public class ABPHud implements Disposable, TextInputListener{
     Skin skinAdd;
     TextureAtlas buttonAtlasAdd;
     
-    TextButtonStyle textButtonStyleRemove;
-    BitmapFont fontRemove;
-    Skin skinRemove;
-    TextureAtlas buttonAtlasRemove;
-    
     TextButtonStyle textButtonStyleMenu;
     BitmapFont fontMenu;
     Skin skinMenu;
@@ -95,36 +90,7 @@ public class ABPHud implements Disposable, TextInputListener{
 				}	    	
 	     	});
 	     stage.addActor(buttonAdd);
-	     
-	     fontRemove = new BitmapFont();
-	     skinRemove = new Skin();
-	     buttonAtlasRemove = new TextureAtlas("Botões/RemoveImg.pack");
-	     skinRemove.addRegions(buttonAtlasRemove);
-	     textButtonStyleRemove = new TextButtonStyle();
-	     textButtonStyleRemove.font = fontRemove;
-	     textButtonStyleRemove.up = skinRemove.getDrawable("RemoverNormal");
-	     textButtonStyleRemove.down = skinRemove.getDrawable("RemoverPressionado");
-	     textButtonStyleRemove.checked = skinRemove.getDrawable("RemoverNormal");
-	     Button buttonRemove = new TextButton(" ", textButtonStyleRemove);
-	     buttonRemove.addListener(new ClickListener() {	    	 
-	    	 	@Override
-				public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-	    		 textButtonStyleRemove.up = skinRemove.getDrawable("RemoverNormal");
-					super.exit(event, x, y, pointer, toActor);
-				}
-				@Override
-				public boolean mouseMoved(InputEvent event, float x, float y) {
-					textButtonStyleRemove.up = skinRemove.getDrawable("RemoverSelecionado");
-					return super.mouseMoved(event, x, y);
-				}
-				@Override
-				public void clicked(InputEvent event, float x, float y) {
-					super.clicked(event, x, y);
-					
-				}    	 
-	     	});
-	     stage.addActor(buttonRemove);
-	     
+	     	     	     
 	     fontMenu = new BitmapFont();
 	     skinMenu = new Skin();
 	     buttonAtlasMenu = new TextureAtlas("Botões/MenuImg.pack");
@@ -149,6 +115,7 @@ public class ABPHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
+					ABPScreen.sair();
 					game.setScreen(new MenuScreen(game));
 				}    	 
 	     	});
@@ -190,8 +157,7 @@ public class ABPHud implements Disposable, TextInputListener{
 		table.top();
 		table.setFillParent(true);
 						
-		table.add(buttonAdd).expandX().pad(10);
-		table.add(buttonRemove).expandX().pad(10);
+		table.add(buttonAdd).expandX().pad(10);		
 		table.add(buttonMenu).expandX().pad(10);
 		table.add(buttonPesq).expandX().pad(10);
 				
@@ -227,10 +193,6 @@ public class ABPHud implements Disposable, TextInputListener{
 		buttonAtlasAdd.dispose();
 		fontAdd.dispose();
 		
-		skinRemove.dispose();
-		buttonAtlasRemove.dispose();
-		fontRemove.dispose();
-		
 		skinMenu.dispose();
 		buttonAtlasMenu.dispose();
 		fontMenu.dispose();
@@ -238,8 +200,7 @@ public class ABPHud implements Disposable, TextInputListener{
 		skinPesq.dispose();
 		buttonAtlasPesq.dispose();
 		fontPesq.dispose();
-		
-		
+			
 		
 	}
 

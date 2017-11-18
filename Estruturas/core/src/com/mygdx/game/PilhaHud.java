@@ -152,6 +152,7 @@ public class PilhaHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
+					PilhaScreen.sair();
 					game.setScreen(new MenuScreen(game));
 				}    	 
 	     	});
@@ -225,20 +226,6 @@ public class PilhaHud implements Disposable, TextInputListener{
 	
 	public void dispose() {
 		stage.dispose();
-		fontAdd.dispose();
-		fontRemove.dispose();
-		fontMenu.dispose();
-		fontPesq.dispose();
-		skinRemove.dispose();
-		skinMenu.dispose();
-		skinPesq.dispose();
-		skinAdd.dispose();
-		buttonAtlasAdd.dispose();
-		buttonAtlasRemove.dispose();
-		buttonAtlasMenu.dispose();
-		buttonAtlasPesq.dispose();
-		
-		
 		
 	}
 

@@ -139,6 +139,7 @@ public class MenuScreen implements Screen{
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */
 				game.setScreen(new ListaSeqScreen(game));
+				MenuScreen.this.dispose();
 			}		    	
 		     });
 	     buttonLseq.setPosition(432, 565);
@@ -175,6 +176,7 @@ public class MenuScreen implements Screen{
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */
 				game.setScreen(new ListaSEncScreen(game));
+				MenuScreen.this.dispose();
 			}		    	
 		     });
 	     buttonLSE.setPosition(150, 415);
@@ -211,6 +213,7 @@ public class MenuScreen implements Screen{
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */
 				game.setScreen(new ListaDEncScreen(game));
+				MenuScreen.this.dispose();
 			}		    	
 		     });
 	     buttonLDE.setPosition(150, 265);
@@ -247,6 +250,7 @@ public class MenuScreen implements Screen{
 				 * vamos chamar uma nova tela, que nesse caso é a janela da pilha
 				 */
 				game.setScreen(new PilhaScreen(game));
+				MenuScreen.this.dispose();
 			}		    	
 		     });
 	     buttonPilha.setPosition(717, 265);
@@ -283,6 +287,7 @@ public class MenuScreen implements Screen{
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */
 				game.setScreen(new FilaScreen(game));
+				MenuScreen.this.dispose();
 			}		    	
 		     });
 	     buttonFila.setPosition(715, 415);
@@ -319,6 +324,7 @@ public class MenuScreen implements Screen{
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */
 				game.setScreen(new ABPScreen(game));
+				MenuScreen.this.dispose();
 			}		    	
 		     });
 	     buttonABP.setPosition(0, 0);
@@ -327,7 +333,7 @@ public class MenuScreen implements Screen{
 		
 		
 	}
-	
+	int teste = 0;
     public void show() {
     	Gdx.input.setInputProcessor(stage);
 		
@@ -340,7 +346,8 @@ public class MenuScreen implements Screen{
 		
 		game.balde.begin();
 		game.balde.draw(fundo, 0, 0);
-		game.balde.end();
+		game.balde.end();		
+		
 		
 		stage.act(delta);
 		stage.draw();

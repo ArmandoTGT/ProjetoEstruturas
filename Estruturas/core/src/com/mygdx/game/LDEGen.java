@@ -77,10 +77,7 @@ public class LDEGen<T> {
 	/** Obtém o i-ésimo elemento de uma lista
 	    Retorna o valor encontrado. */
 	public T elemento (int pos) {
-	    
-		No aux = inicio;
-		 No aux2 = fim;
-		 No foi = null;;
+		 No aux = inicio;
 		int cont = 1;
 
 	    if (vazia()) {
@@ -90,23 +87,15 @@ public class LDEGen<T> {
 	    if ((pos < 1) || (pos > tamanho())){
 	        return null; // Posicao invalida 
 	    }
-	    if(pos > tamanho()/2){
-	    	while (cont >= pos){
-		        // modifica "aux" para apontar para o proximo elemento da lista 
-		        aux2 = aux2.getAnt();
-		        cont--;
-		        foi = aux2;
-		    }
-	    }else{
+	   
 	    // Percorre a lista do 1o elemento até pos 
-	    while (cont <= pos){
+	    while (cont < pos){
 	        // modifica "aux" para apontar para o proximo elemento da lista 
 	        aux = aux.getProx();
-	        cont++;
-	        foi = aux;
-	          }  	    
-	    }
-	    return foi.getConteudo();
+	        cont++;	      
+	    }  	    
+	    
+	    return aux.getConteudo();
 		
 
 	   

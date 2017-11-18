@@ -1,5 +1,8 @@
 package com.mygdx.game;
 
+/*
+ * 
+ */
 
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
@@ -25,6 +28,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PilhaScreen implements Screen, TextInputListener{
 	
+	
+
+
 	private static int posRabo;
 	private static Executor game;
 	private OrthographicCamera camera;
@@ -32,17 +38,16 @@ public class PilhaScreen implements Screen, TextInputListener{
 	private PilhaHud hud; // Interface de interação com o usuuário(hud) que fica encima da nossa screen
 	private Texture fundo;
 	private static int elementos; //Total de elementos que serão mostrados na tela
-	static Texture quadValido;
-	static Texture quadVazio;
-	static Texture cabeca;
-	private static int posi[];
-	private static String[] conteudo;
+	private Texture quadValido;
+	private Texture quadVazio;
+	private Texture cabeca;
 	static BitmapFont font[];
 	static BitmapFont font2[];
-	static String[] conteudoInvert;
+	private static PilhaSeq pilha;
+	private static int posi[];
 	static int aux = 0;
 	static String pesquisa;
-	static boolean pesquisou;
+	public static boolean exit;
 	
 
 	/*
@@ -50,16 +55,14 @@ public class PilhaScreen implements Screen, TextInputListener{
 	 * apenas, e somente apenas, no construtor
 	 */
 	public PilhaScreen(Executor game){
+		exit = false;
 		posRabo = 0;
 		quadValido = new Texture("coisa/quadradoPilhaPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoPilhaVazio.png");
 		cabeca = new Texture("coisa/PonteiroTopo.png");
 		Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
-		PilhaSeq();
-		conteudo = new String[21];
+		pilha = new PilhaSeq(quadValido, quadVazio);
 		posi = new int[21];
-		conteudoInvert = new String[21];
-		pesquisou = false;
 
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
@@ -93,13 +96,6 @@ public class PilhaScreen implements Screen, TextInputListener{
 		hud = new PilhaHud(game.balde, game);
 		fundo = new Texture("coisa/FundoEstruturas.png");
 		elementos = 0;
-		//setas = new Texture[50];
-		//---instaciação dos quadrados deletado
-
-
-		/*for(int i = 0; i < 50; i++) {
-			setas[i] = new Texture("coisa/seta.png");
-		}*/
 		
 	}
 
@@ -120,34 +116,36 @@ public class PilhaScreen implements Screen, TextInputListener{
 		game.balde.begin();
 		game.balde.draw(fundo, -1980, -1020);
 			
-			for(int i = 1; i <= elementos; i++) {
+			for(int i = 0; i < elementos; i++) {
 				/*
 				 * Como é uma pilha, foi desenhado na vertical, estando inicialmente
 				 * três blocos longe do centro e para alinhas com os botões superiores,
 				 * alinhamos a posição horizontal em 64
 				 */
-				game.balde.draw(image(i), -64, -370 + 129 * (i - 1)); 
-				font2[i].draw(game.balde, String.valueOf(i+"*"), -50,	-250 + 129 * (i - 1));
-				
+				game.balde.draw(pilha.imagem(i), -64, -370 + 129 * (i));
+				font2[i].draw(game.balde, String.valueOf((i + 1) +"*"), -50,	-250 + 129 * (i));
 			}
 			if(posRabo != 0) {
 				game.balde.draw(cabeca, -285, -369 + 129 * (posRabo - 1));
-				for(int i = 0; i <= 20; i++) {
-					try {					
-				font[posi[i]].draw(game.balde, conteudo[i], -2,	-300 + 129 * (posi[i] - 1));
-				
-				}
-				catch (Exception e) {
-				
-				}
+				for(int i = 0; i < pilha.tamanho(); i++) { //Vai printar o conteúdo até o tamanho atual da pilha
+					try {
+											
+					font[posi[i]].draw(game.balde, pilha.conteudo(i), -2,	-300 + 129 * (posi[i] - 1));
+					
+					}catch (Exception e) {
+					
+					}
 				}
 			}
-			
+		
+		if(exit) {
+			this.dispose();
+		}
+		
+		
 		game.balde.end();
 		hud.stage.act(delta);
 		hud.stage.draw();
-		
-		
 	}
 
 	
@@ -225,7 +223,6 @@ public class PilhaScreen implements Screen, TextInputListener{
 		}
 		
 		
-		
 	}
 
 	@Override
@@ -258,6 +255,10 @@ public class PilhaScreen implements Screen, TextInputListener{
 		
 	}
 	
+	public static void sair() {
+		exit = true;		
+	}
+	
 	/*
 	 * Os próximos dois métodos são responsáveis por imprimirem
 	 * na tela a posição que teve alguma alteração
@@ -266,18 +267,15 @@ public class PilhaScreen implements Screen, TextInputListener{
 	public static void insereTela(String valor) {
 		try {
 			//Gera exceção caso o usuário tente passar o número de elementos da pilha!
-			if((topo != -1) && (aux == elementos)) {
+			if((pilha.top() == "null") && (aux == elementos)) {
 				throw new Exception();
 			}
 			
 			int n = Integer.parseInt(valor);//Gera uam exceção caso o valor do conteúdo não for um inteiro
-			push(valor);//Inserimos na posição inicial um novo valor
+			pilha.push(valor);//Inserimos na posição inicial um novo valor
 			//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
-			quads[posRabo] = quadValido;
 			posRabo++;
-			aux++;
 			posi[posRabo - 1] = posRabo;
-			conteudo[posRabo - 1] = valor;
 			
 		}
 		catch(NumberFormatException nf){
@@ -292,18 +290,17 @@ public class PilhaScreen implements Screen, TextInputListener{
 	
 	public static void removeTela() {
 		try {
-			if((pop() == "null") && (aux == 0)) {
+			String auxS = pilha.pop(); //Manterá o valor daquilo que acabou de ser excluido da pilha
+			if((auxS.equals("null")) && (aux == 0)) {
 				throw new Exception();
 			} 
 			else
 			{
-				System.out.println(pop()); //Removemos o valor salvo na última posição
+				System.out.println(auxS); //Removemos o valor salvo na última posição
 				//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
 				posRabo--;
 				aux--;
-				quads[posRabo] = quadVazio;
 				posi[posRabo] = posRabo;
-				conteudo[posRabo] = null;
 			}
 		}
 		catch(Exception e) {
@@ -315,39 +312,33 @@ public class PilhaScreen implements Screen, TextInputListener{
 	
 	public static void Pesquisa(String text){
 		pesquisa = text;
-		pesquisou = true;
-		try{
-			for(int i = 0; i <= 21; i++){				
-				if(pesquisa.equals(conteudo[i])){
-					
-				}
-				
-				else{				
-				font[i + 1].setColor(Color.valueOf("b7b7b7"));
-				}				
-			}
-			}catch(Exception g){				
-			}
 		
-		for(int i = 0; i <= 21; i++) {
+		for(int i = 0; i <= 20; i++) {
+			 
+			
+			font[i].setColor(Color.valueOf("b7b7b7"));
+			  }
+		
+		
+		
+		for(int i = pilha.tamanho() -1 ; i >= 0; i--) {
 			//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
 			//	se for 	igual alteramos a cor da fonte
 				try {
-			if(pesquisa.equals(conteudo[i])) {				
-				font[i + 1].setColor(Color.valueOf("7fff00"));			
+					System.out.println(i);
+			if(pesquisa.equals(pilha.conteudo(i))) {
+				font[i + 1].setColor(Color.valueOf("7fff00"));
 				break;
 			}else {
-				font[i + 1].setColor(Color.valueOf("7fff00"));				
+				font[i + 1].setColor(Color.valueOf("7fff00"));
 				Thread.sleep(1000);
-				font[i + 1].setColor(Color.valueOf("b7b7b7"));				
+				font[i + 1].setColor(Color.valueOf("b7b7b7"));
 			}
-				}catch (Exception f){				
+				}catch (Exception f){
+				System.out.println("catch");
 			}
 			}
-		
-		}
-		
-	
+	}
 	
 	
 	/*
@@ -360,87 +351,6 @@ public class PilhaScreen implements Screen, TextInputListener{
 		}
 			return true;
 	}
-	
-	//-------------------------------PILHA SEQUENCIAL-------------------------------------------------
-	
-	private static String dados[]; // Vetor que contÃ©m os dados da lista 
-	private static int topo; 
-	private static int tamMax;
-	private static Texture[] quads;
-
-    static void PilhaSeq(){
-    		tamMax = 20;
-    		dados = new String[tamMax];
-    		topo = -1;
-    		quads = new Texture[20];
-			for(int i = 0; i<20 ; i++) {
-	    		quads[i] = new Texture("coisa/quadradoPilhaVazio.png");
-	    	}
-    	}
-
-    /** Verifica se a Pilha estÃ¡ vazia */
-    public static boolean vazia(){
-    		if (topo == -1)
-    			return true;
-    	   else 
-    	      return false;
-	}
-	
-    /**Verifica se a Pilha estÃ¡ cheia */
-    public static boolean cheia(){
-        if (topo == (tamMax-1))
-  		  return true;
-      else
-  		  return false;
-	}
-	
-    /**ObtÃ©m o tamanho da Pilha*/
-    public static int tamanho(){
-		return topo+1;
-	}
-    
-    /** Consulta o elemento do topo da Pilha.
-		Retorna -1 se a pilha estiver vazia, 
-		caso contrÃ¡rio retorna o valor que estÃ¡ no topo da pilha. */
- 	public static String top () {
-      if (vazia()) 
-         return "null"; // pilha vazia
- 	  
-      return dados[topo];
- 	}
-     
-	 /** Insere um elemento no topo da pilha.
-	  Retorna false se a pilha estiver cheia. 
-	  Caso contrÃ¡rio retorna true */
- 	public static boolean push (String valor) {
- 		if (cheia()) 
- 			return false;  // err: pilha cheia 
- 		
- 		topo++;
- 		dados[topo] = valor; 
- 		return true;
-	 }   
-
-	 /** Retira o elemento do topo da pilha.
-	  Retorna -1 se a pilha estiver vazia. */
- 	public static String pop() {          
- 		if (vazia()) 
- 			return "null"; // Pilha vazia
- 		
- 		String valor = dados[topo]; 
- 		topo--; 
- 		return valor;
- 	}
- 	
-    /*
-     * O método foi implementado para trabalhar graficamente com essa classe
-     * basicamente retorna o texture atualmente salvo na posição designada
-     */
-    public static Texture image(int pos) {
-      	return quads[pos - 1];
-    }
-
-
 	
 	
 }
