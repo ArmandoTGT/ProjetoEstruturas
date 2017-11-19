@@ -55,7 +55,7 @@ public class ListaSEncHud implements Disposable, TextInputListener{
     Skin skinPesq;
     TextureAtlas buttonAtlasPesq;
     
-	
+		
 	public ListaSEncHud(SpriteBatch sb, final Executor game) {
 		elementos = 0;
 		delete = false;
@@ -164,9 +164,10 @@ public class ListaSEncHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					ListaSEncScreen.sair();
+					ListaSEncScreen.sair();								
 					game.setScreen(new MenuScreen(game));
-				}    	 
+				}
+				 	 
 	     	});
 	     stage.addActor(buttonMenu);
 	     

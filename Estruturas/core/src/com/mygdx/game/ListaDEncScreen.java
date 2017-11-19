@@ -33,7 +33,7 @@ public class ListaDEncScreen implements Screen{
 	private OrthographicCamera camera;
 	private Viewport port;
 	private ListaDEncHud hud;
-	private Texture fundo;
+	
 	private static LDEGen lista;
 	static Texture quadValido;
 	static Texture quadVazio;
@@ -55,6 +55,7 @@ public class ListaDEncScreen implements Screen{
 		posRabo = 0;
 		posicao = new Random();
 		posicaoAux = 0;
+		exit = false;
 		quadValido = new Texture("coisa/BlocoDuplamenteEncadeado.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
 		setaDireita = new Texture("coisa/SetaDuplaDireita.png");
@@ -86,7 +87,7 @@ public class ListaDEncScreen implements Screen{
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
 		hud = new ListaDEncHud(game.balde, game);
-		fundo = new Texture("coisa/FundoEstruturas.png");
+	
 		//setas = new Texture[50];
 		//---instaciação dos quadrados deletado
 		/*for(int i = 0; i < 50; i++) {
@@ -105,16 +106,18 @@ public class ListaDEncScreen implements Screen{
 	public void render(float delta) {
 		moveCamera(delta);
 				
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(64/255.0f, 102/255.0f, 128/255.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		game.balde.draw(fundo, -1980, -1020);
+		
 		game.balde.draw(cabeca, -640, 120);	
 		
 		if(exit) {
+			System.out.println("chegou");	
 			this.dispose();
+			
 		}
 		/*
 		 * Esse for fará uma seta após o bloco inicial, pois ele será a seta 
@@ -218,11 +221,7 @@ public class ListaDEncScreen implements Screen{
 		rabo.dispose();
 		quadVazio.dispose();
 		quadValido.dispose();
-		fundo.dispose();
-		for(int i = 0; i <= 20; i++){
-		font[i].dispose();		
-		}
-		font2.dispose();
+		
 		
 	}
 	
@@ -282,11 +281,11 @@ public class ListaDEncScreen implements Screen{
 	}
 	public static void Pesquisa(String text) {
 		pesquisa = text;		
-		
+		int aux = 0;
 		try{
 			for(int i = 1; i <= lista.tamanho(); i++){				
 				if(pesquisa.equals(String.valueOf(lista.elemento(i)))){
-					
+					aux = i;
 				}
 				
 				else{				
@@ -296,8 +295,26 @@ public class ListaDEncScreen implements Screen{
 			}catch(Exception g){				
 			}
 		
+		
+		if(aux > lista.tamanho()/2){
+			for(int j = lista.tamanho(); j >= 1; j--) {
+				try {
+				if(pesquisa.equals(String.valueOf(lista.elemento(j)))){
+					font[j - 1].setColor(Color.valueOf("7fff00"));				
+					break;
+				}else{							
+					font[j - 1].setColor(Color.valueOf("7fff00"));
+					Thread.sleep(1000);
+					font[j - 1].setColor(Color.valueOf("b7b7b7"));
+		}
+		}catch(Exception f){
 			
-	
+		}
+			}
+		}	
+		
+			
+	if(aux <= lista.tamanho()/2){
 		for(int j = 1; j <= lista.tamanho(); j++) {
 			try {
 			if(pesquisa.equals(String.valueOf(lista.elemento(j)))){
@@ -312,6 +329,6 @@ public class ListaDEncScreen implements Screen{
 		
 	}
 		}
-
+	}
 	}
 }

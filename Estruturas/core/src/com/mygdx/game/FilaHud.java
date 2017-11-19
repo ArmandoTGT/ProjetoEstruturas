@@ -148,7 +148,7 @@ public class FilaHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					FilaScreen.sair();
+					//FilaScreen.sair();
 					game.setScreen(new MenuScreen(game));
 				}    	 
 	     	});
@@ -214,7 +214,6 @@ public class FilaHud implements Disposable, TextInputListener{
 	else if(opcao == 1) {		
 		FilaScreen.Pesquisa(text);
 	}
-			//FilaScreen.insereTela(text);
 	}
 
 	@Override

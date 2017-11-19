@@ -32,8 +32,7 @@ public class ListaSEncScreen implements Screen{
 	private static int posicaoAux;
 	private OrthographicCamera camera;
 	private Viewport port;
-	private ListaSEncHud hud;
-	private Texture fundo;
+	private ListaSEncHud hud;	
 	private static LSEGen lista;
 	static Texture quadValido;
 	static Texture quadVazio;
@@ -53,6 +52,7 @@ public class ListaSEncScreen implements Screen{
 	public ListaSEncScreen(Executor game){
 		posicao = new Random();
 		posRabo = 0;
+		exit = false;
 		posicaoAux = 0;
 		quadValido = new Texture("coisa/BlocoEncadeado.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
@@ -83,7 +83,7 @@ public class ListaSEncScreen implements Screen{
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
 		hud = new ListaSEncHud(game.balde, game);
-		fundo = new Texture("coisa/FundoEstruturas.png");
+	
 	
 		
 	}
@@ -98,16 +98,16 @@ public class ListaSEncScreen implements Screen{
 	public void render(float delta) {
 		moveCamera(delta);
 				
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(64/255.0f, 102/255.0f, 128/255.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		game.balde.draw(fundo, -1980, -1020);
+		
 		game.balde.draw(cabeca, -640, 120);	
 		
-		if(exit) {
-			this.dispose();
+		if(exit){			
+			this.dispose();		
 		}
 		
 			for(int i = 1; i <= lista.tamanho(); i++) {
@@ -126,6 +126,7 @@ public class ListaSEncScreen implements Screen{
 		
 	}
 
+	
 	
 	private void moveCamera(float dt) {
 		setmoveCamera(dt);
@@ -191,6 +192,11 @@ public class ListaSEncScreen implements Screen{
 
 	
 	public void dispose() {
+		
+		setaDireita.dispose();
+		cabeca.dispose();		
+		quadVazio.dispose();
+		quadValido.dispose();
 		
 		
 	}

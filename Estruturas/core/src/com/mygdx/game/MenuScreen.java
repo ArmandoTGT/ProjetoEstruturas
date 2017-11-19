@@ -65,8 +65,7 @@ public class MenuScreen implements Screen{
     Skin skinABP;
     TextureAtlas buttonAtlasABP;
     private Texture fundo;
-    
-    
+        
     public Stage stage;
     private Viewport port;
 	
@@ -108,6 +107,7 @@ public class MenuScreen implements Screen{
 	     buttonSair.setPosition(430, 115);
 		 stage.addActor(buttonSair);
 		//end Botão Sair
+		 
 		 
 		//Begin Botão Lseq
 		 fontLseq = new BitmapFont();

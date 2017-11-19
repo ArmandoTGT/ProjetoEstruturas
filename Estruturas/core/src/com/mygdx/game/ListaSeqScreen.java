@@ -34,7 +34,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	private OrthographicCamera camera;
 	private Viewport port;
 	private ListaSeqHud hud;
-	private Texture fundo;
+	
 	private static ListaSeqGen lista;
 	static Texture quadValido;
 	static Texture quadVazio;
@@ -55,6 +55,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	public ListaSeqScreen(Executor game){
 		posRabo = 0;
 		posicaoAux = 0;
+		exit = false;
 		Gdx.input.getTextInput(this, "Fila Sequencial", "", "Tamanho da estrutura");
 		quadValido = new Texture("coisa/quadradoPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
@@ -86,7 +87,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
 		hud = new ListaSeqHud(game.balde, game);
-		fundo = new Texture("coisa/FundoEstruturas.png");
+		
 		//setas = new Texture[50];
 		//---instaciação dos quadrados deletado
 		/*for(int i = 0; i < 50; i++) {
@@ -105,16 +106,17 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	public void render(float delta) {
 		moveCamera(delta);
 				
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(64/255.0f, 102/255.0f, 128/255.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		game.balde.draw(fundo, -1980, -1020);
+	
 		
 		if(exit) {
+			System.out.println("chegou");	
 			this.dispose();
-		}
+					}
 		
 		//A seta para a direita será colocada após o primeiro quadrado de tamanho 128 pixels 640 + 128 = 512
 			for(int i = 1; i <= 20; i++) {
@@ -207,12 +209,8 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	public void dispose() {
 		quadVazio.dispose();
 		quadValido.dispose();
-		fundo.dispose();
-		for(int i = 0; i <= 20; i++){
-		font[i].dispose();		
-		}
-		font2.dispose();
 		
+				
 	}
 	
 	public static void sair() {

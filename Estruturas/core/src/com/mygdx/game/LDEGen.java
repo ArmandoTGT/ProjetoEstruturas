@@ -87,6 +87,8 @@ public class LDEGen<T> {
 	    if ((pos < 1) || (pos > tamanho())){
 	        return null; // Posicao invalida 
 	    }
+	    
+	    
 	   
 	    // Percorre a lista do 1o elemento até pos 
 	    while (cont < pos){

@@ -35,12 +35,15 @@ public class ABPScreen implements Screen{
 	private OrthographicCamera camera;
 	private Viewport port;
 	private ABPHud hud;
-	private Texture fundo;
+	
 	//Atributos relacionados a construção gráfica da arvore
 	static ABP arvore;
 	static Texture quadValido;
-	static Texture setaDireita;
-	static Texture setaEsquerda;
+	
+	static Texture quadDireita1;
+	static Texture quadEsquerda1;
+	static Texture quadDireita2;
+	static Texture quadEsquerda2;
 	static Texture raiz;
 	private static int raizAux, indice, x, y, insereAux[];
 	private static NoABP no;
@@ -57,19 +60,22 @@ public class ABPScreen implements Screen{
 	 * Todos os textures precisam ser construidos
 	 * apenas, e somente apenas, no construtor
 	 */
-	public ABPScreen(Executor game){
-		
+	public ABPScreen(Executor game){		
 		indice = 0;
 		menos = new int [20];
 		cont = 0;
 		nos = new NoABP[20];
+		exit = false;
 		
 		insereAux = new int[20];
 		posicaoAux = 0;
-		quadValido = new Texture("coisa/BlocoEncadeado.png");
+		quadValido = new Texture("coisa/BlocoArvoreRaiz.png");
 		//Precisa arrumar as setas e a raiz
-		setaDireita = new Texture("coisa/BlocoEncadeado.png");
-		setaEsquerda = new Texture("coisa/BlocoEncadeado.png");
+		
+		quadDireita1 = new Texture("coisa/BlocoArvoreNv1Direita.png");
+		quadEsquerda1 = new Texture("coisa/BlocoArvoreNv1Esquerda.png");
+		quadDireita2 = new Texture("coisa/BlocoArvoreNv2Direita.png");
+		quadEsquerda2 = new Texture("coisa/BlocoArvoreNv2Esquerda.png");
 		raiz = new Texture("coisa/PonteiroCabeça.png");
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		
@@ -91,14 +97,12 @@ public class ABPScreen implements Screen{
 		  font2.setColor(Color.valueOf("b7b7b7"));		  
 		  generator2.dispose();
 		  
-		arvore = new ABP(quadValido,setaDireita,setaEsquerda);
+		arvore = new ABP(quadValido, quadDireita1, quadEsquerda1, quadDireita2, quadEsquerda2);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
-		hud = new ABPHud(game.balde, game);
-		fundo = new Texture("coisa/FundoEstruturas.png");
+		hud = new ABPHud(game.balde, game);		
 	
-		
 	}
 
 	
@@ -111,17 +115,18 @@ public class ABPScreen implements Screen{
 	public void render(float delta) {
 		moveCamera(delta);
 				
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(64/255.0f, 102/255.0f, 128/255.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		game.balde.draw(fundo, -1980, -1020); 
+	
 		
 		if(exit) {
+			System.out.println("chegou");	
 			this.dispose();
+			
 		}
-		
 		if(!arvore.vazia()) {
 			
 			arvore.raiz().setX(-200);
@@ -140,7 +145,7 @@ public class ABPScreen implements Screen{
 				if(nos[i].getDirecao() ==  1)	{//Direita
 						
 					
-					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), arvore.busca(insereAux[i]).getPai().getX() +150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) + menos[i],
+					game.balde.draw(arvore.busca(insereAux[i]).getQuad(), (arvore.busca(insereAux[i]).getPai().getX() +150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) + menos[i]) - contaNv(arvore.busca(insereAux[i]).getProfundidade()),
 							arvore.busca(insereAux[i]).getPai().getY() -150 );
 					arvore.busca(insereAux[i]).setX(arvore.busca(insereAux[i]).getPai().getX() +150 * contaD(arvore.busca(insereAux[i]).getProfundidade(), i) + menos[i] );
 				
@@ -189,6 +194,31 @@ public class ABPScreen implements Screen{
 		}
 		if(prof == 4) {
 			menos[i] = 50;
+			return 1;			
+		}
+		
+		else {
+			return 1;
+		}
+		
+	}
+	
+private int contaNv(int prof) {
+		
+		if(prof == 0) {
+			return 0;
+		}
+		if(prof == 1) {
+			return 598;
+		}
+		if(prof == 2) {
+			return 300;
+		}
+		if(prof == 3) {
+			return 1;
+		}
+		if(prof == 4) {
+			
 			return 1;			
 		}
 		
@@ -263,16 +293,13 @@ public class ABPScreen implements Screen{
 
 	
 	public void dispose() {
-		setaDireita.dispose();
-		setaEsquerda.dispose();
+		quadDireita1.dispose();
+		quadEsquerda1.dispose();
+		quadDireita2.dispose();
+		quadEsquerda2.dispose();
 		raiz.dispose();
 		quadValido.dispose();
-		fundo.dispose();
-		for(int i = 0; i <= 20; i++){
-		font[i].dispose();
-		}
-		font2.dispose();
-		
+			
 		
 	}
 	

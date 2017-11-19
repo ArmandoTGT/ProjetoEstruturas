@@ -15,16 +15,16 @@ public class Executor extends Game {
 	
 	public SpriteBatch balde;
 	
-	
+	static public MenuScreen menuScreen;
 	
 	
 	@Override
 	public void create () {
-	
 		
+		menuScreen = new MenuScreen(this);
 		balde = new SpriteBatch();
 		
-		setScreen(new MenuScreen(this));
+		setScreen(menuScreen);
 		
 	}
 

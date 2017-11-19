@@ -106,23 +106,27 @@ public class ABP{
 	private NoABP raiz;
 	private int tamanho;
 	private Texture quadRaiz;
-	private Texture quadEsquerda;
-	private Texture quadDireita;
+	private Texture quadEsquerda1;
+	private Texture quadDireita1;
+	private Texture quadEsquerda2;
+	private Texture quadDireita2;
 	public NoABP ultimoNo;
 	public NoABP dad;
 	public int tent[];
 	public int cont;
 	public boolean pesquisou;
 	
-	public ABP(Texture quadRaiz, Texture quadDireita, Texture quadEsquerda){
+	public ABP(Texture quadRaiz, Texture quadDireita1, Texture quadEsquerda1, Texture quadDireita2, Texture quadEsquerda2){
 		pesquisou = false;
 		cont = 0;
 		tent = new int[20];
 		tamanho = 0;
 		raiz = null;
 		this.quadRaiz = quadRaiz; //Vai definir o texture quando ele está na raiz
-		this.quadEsquerda = quadEsquerda; //Vai definir o texture que ele está a esquerda do no anterior
-		this.quadDireita = quadDireita; //Vai definir o texture que ele está a direita do no anterior
+		this.quadEsquerda1 = quadEsquerda1; //Vai definir o texture que ele está a esquerda do no anterior
+		this.quadDireita1 = quadDireita1;
+		this.quadEsquerda2 = quadEsquerda2; //Vai definir o texture que ele está a esquerda do no anterior
+		this.quadDireita2 = quadDireita2;//Vai definir o texture que ele está a direita do no anterior
 	}
 	
 	/** Verifica se a arvore está vazia */
@@ -245,7 +249,24 @@ public class ABP{
 			novoNo.setProfundidade(profundidadePai);
 			//Agora a sua direção e quadrado correspondente
 			novoNo.setDirecao(2);
-			novoNo.setQuad(quadEsquerda); //Se o nó for colocado aqui, significa que ele está a esquerda
+			if(novoNo.getProfundidade() == 0) {
+				novoNo.setQuad(quadRaiz);				
+				}
+			else if(novoNo.getProfundidade() == 1) {
+				novoNo.setQuad(quadEsquerda1);				
+				}
+			else if(novoNo.getProfundidade() == 2) {
+				novoNo.setQuad(quadEsquerda2);				
+				}
+			//if(novoNo.getProfundidade() == 3) {
+			//	novoNo.setQuad(quadEsquerda);
+			//	}
+			//if(novoNo.getProfundidade() == 4) {
+			//	novoNo.setQuad(quadEsquerda);
+			//	}
+			else{
+				novoNo.setQuad(quadRaiz);
+				}//Se o nó for colocado aqui, significa que ele está a esquerda
 			//Finalmente o novoNo está preparado para ser inserido na arvore
 			p.setEsq(novoNo);
 		}
@@ -256,7 +277,24 @@ public class ABP{
 			novoNo.setProfundidade(profundidadePai);
 			//Agora a sua direção e quadrado correspondente
 			novoNo.setDirecao(1);
-			novoNo.setQuad(quadDireita); //Se o nó for colocado aqui, significa que ele está a direita
+			if(novoNo.getProfundidade() == 0) {
+				novoNo.setQuad(quadRaiz);
+				}
+			else if(novoNo.getProfundidade() == 1) {
+				novoNo.setQuad(quadDireita1);
+				}
+			else if(novoNo.getProfundidade() == 2) {
+				novoNo.setQuad(quadDireita2);
+				}
+			//if(novoNo.getProfundidade() == 3) {
+			//	novoNo.setQuad(quadEsquerda);
+			//	}
+			//if(novoNo.getProfundidade() == 4) {
+			//	novoNo.setQuad(quadEsquerda);
+				//}
+			else{
+				novoNo.setQuad(quadRaiz);
+				} //Se o nó for colocado aqui, significa que ele está a direita
 			//Finalmente o novoNo está preparado para ser inserido na arvore
 			p.setDir(novoNo);
 		}

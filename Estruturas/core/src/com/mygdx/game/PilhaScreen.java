@@ -36,7 +36,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 	private OrthographicCamera camera;
 	private Viewport port;
 	private PilhaHud hud; // Interface de interação com o usuuário(hud) que fica encima da nossa screen
-	private Texture fundo;
+	
 	private static int elementos; //Total de elementos que serão mostrados na tela
 	private Texture quadValido;
 	private Texture quadVazio;
@@ -94,7 +94,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
 		hud = new PilhaHud(game.balde, game);
-		fundo = new Texture("coisa/FundoEstruturas.png");
+		
 		elementos = 0;
 		
 	}
@@ -109,12 +109,12 @@ public class PilhaScreen implements Screen, TextInputListener{
 	public void render(float delta) {
 		moveCamera(delta);
 				
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(64/255.0f, 102/255.0f, 128/255.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		game.balde.draw(fundo, -1980, -1020);
+		
 			
 			for(int i = 0; i < elementos; i++) {
 				/*
@@ -139,7 +139,9 @@ public class PilhaScreen implements Screen, TextInputListener{
 			}
 		
 		if(exit) {
+			System.out.println("chegou");	
 			this.dispose();
+			
 		}
 		
 		
@@ -216,13 +218,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 		cabeca.dispose();
 		quadVazio.dispose();
 		quadValido.dispose();
-		fundo.dispose();
-		for(int i = 0; i <= 20; i++){
-		font[i].dispose();
-		font2[i].dispose();
-		}
-		
-		
+			
 	}
 
 	@Override
