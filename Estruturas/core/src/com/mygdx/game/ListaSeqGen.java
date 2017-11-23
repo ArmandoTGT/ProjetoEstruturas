@@ -137,9 +137,9 @@ public class ListaSeqGen<T> {
 
 	    /* Desloca todos os elementos apos 'pos', uma
 	    posicao a esquerda */
+		  quadrado[nElementos - 1] = quadVazio; 
 	    for (int i = pos - 1; i < nElementos - 1; i++){
 	 		  dados[i] = dados[i+1];
-	 		  if(i + 1 == nElementos - 1) quadrado[i + 1] = quadVazio; // Pois é dada uma posição de memória par ao último elemento
 		 }
 
 	   /* Decrementa o numero de elementos na lista */

@@ -1,5 +1,9 @@
 package com.mygdx.game;
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.graphics.Color;
@@ -150,6 +154,7 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					ListaSeqScreen.sair();
+					ListaSeqScreen.lista = null;
 					game.setScreen(new MenuScreen(game));
 				}    	 
 	     	});
@@ -158,23 +163,23 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 
 	     fontPesq = new BitmapFont();
 	     skinPesq = new Skin();
-	     buttonAtlasPesq = new TextureAtlas("Botões/RemoveImg.pack");
+	     buttonAtlasPesq = new TextureAtlas("Botões/Pesquisa.pack");
 	     skinPesq.addRegions(buttonAtlasPesq);
 	     textButtonStylePesq = new TextButtonStyle();
 	     textButtonStylePesq.font = fontPesq;
-	     textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
-	     textButtonStylePesq.down = skinPesq.getDrawable("RemoverPressionado");
-	     textButtonStylePesq.checked = skinPesq.getDrawable("RemoverNormal");
+	     textButtonStylePesq.up = skinPesq.getDrawable("PesquisarNormal");
+	     textButtonStylePesq.down = skinPesq.getDrawable("PesquisarPressionado");
+	     textButtonStylePesq.checked = skinPesq.getDrawable("PesquisarNormal");
 	     Button buttonPesq = new TextButton(" ", textButtonStylePesq);
 	     buttonPesq.addListener(new ClickListener() {	    	 
 	    	 	@Override
 				public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-	    		 textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
+	    		 textButtonStylePesq.up = skinPesq.getDrawable("PesquisarNormal");
 					super.exit(event, x, y, pointer, toActor);
 				}
 				@Override
 				public boolean mouseMoved(InputEvent event, float x, float y) {
-					textButtonStylePesq.up = skinPesq.getDrawable("RemoverSelecionado");
+					textButtonStylePesq.up = skinPesq.getDrawable("PesquisarSelecionado");
 					return super.mouseMoved(event, x, y);
 				}
 				@Override
@@ -207,19 +212,35 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 	 */
 	@Override
 	public void input(String text) {
-		int pos, valor;
-		if(opcao ==0) {
-			String entrada [] = text.split("-");
-			pos = Integer.parseInt(entrada[0]);
-			ListaSeqScreen.insereTela(pos, entrada[1]);
+		int pos;
+		String[] entrada;
+		try{
+			if(opcao == 0) {
+				entrada = text.split("-");
+				if(isNumber(entrada[0])){			
+					pos = Integer.parseInt(entrada[0]);
+					ListaSeqScreen.insereTela(pos, entrada[1]);
+				}
+				else
+				{
+					throw new Exception();
+				}
+			}
+			
+			if(opcao == 1) {
+				pos = Integer.parseInt(text);
+				ListaSeqScreen.removeTela(pos);
+			}
+		
+			if(opcao == 2) {
+				pos = Integer.parseInt(text);
+				ListaSeqScreen.Pesquisa(text);
+			}
 		}
-		else if(opcao == 1) {
-			pos = Integer.parseInt(text);
-			ListaSeqScreen.removeTela(pos);
-		}
-		else if(opcao == 2) {
-			pos = Integer.parseInt(text);
-			ListaSeqScreen.Pesquisa(text);
+		
+		catch(Exception e){
+			JOptionPane.showMessageDialog(null, "Posição Inválida!", 
+					  "Error", ERROR_MESSAGE);	
 		}
 	}
 
@@ -233,5 +254,12 @@ public class ListaSeqHud implements Disposable, TextInputListener{
 		
 	}
 
+	public static boolean isNumber(String text) throws Exception {
+		int number = Integer.parseInt(text);
+		if((number < 1) || (number > 20)){
+			return false;
+		}
+			return true;
+	}
 
 }

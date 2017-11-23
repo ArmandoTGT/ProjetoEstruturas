@@ -34,8 +34,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	private OrthographicCamera camera;
 	private Viewport port;
 	private ListaSeqHud hud;
-	
-	private static ListaSeqGen lista;
+	public static ListaSeqGen lista;
 	static Texture quadValido;
 	static Texture quadVazio;
 	static Texture cabeca;
@@ -44,9 +43,10 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	private static int posRabo;
 	static BitmapFont font[];
 	static BitmapFont font2;
-	static int aux = 1;
+	static int aux = 1, count = 0, valorRem;
+	static int[] existe;
 	static String pesquisa;
-	public static boolean exit;
+	public static boolean exit, existeS = false, posInvalida = false, cheioS = false, elementoExiste = false;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -56,7 +56,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 		posRabo = 0;
 		posicaoAux = 0;
 		exit = false;
-		Gdx.input.getTextInput(this, "Fila Sequencial", "", "Tamanho da estrutura");
+		Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
 		quadValido = new Texture("coisa/quadradoPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoVazio.png");
 		setaDireita = new Texture("coisa/SetaDuplaDireita.png");
@@ -126,9 +126,7 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 					game.balde.draw(lista.imagem(i), -640 + 128 * (i - 1), 0); //----
 				}catch(Exception ex){
 					break; //Ele vai quebrar o for se a lista ainda não tiver sido criada
-				}
-				
-					
+				}	
 
 				font[i -1].draw(game.balde, lista.elemento(i), -640 + 60 + (128 * (i - 1)),	70);
 				
@@ -209,12 +207,11 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	public void dispose() {
 		quadVazio.dispose();
 		quadValido.dispose();
-		
-				
+		System.out.println("fechou");
 	}
 	
 	public static void sair() {
-		exit = true;		
+		exit = true;
 	}
 	
 	/*
@@ -223,35 +220,63 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 	 */
 	
 	public static void insereTela(int pos, String valor) {
+		tiraPesquisa();
 		try {
 			//Verifica se o valor está dentro do padrão
 			if((pos < 1) || (pos > 20)) {
 				throw new Exception();
 			}
 			if(pos > aux) {
+				if(count == lista.tamanho()){
+					cheioS = true;
+					throw new Exception();
+				}
 				throw new Exception();
 			}
-
+			
 			int n = Integer.parseInt(valor);
+			if(existeP(n)){
+				existeS = true;
+				throw new Exception();
+			}
+			
+			existe[count] = n;
 			if(lista.insere(pos, valor)){
-			posRabo++;
-			aux++;
-			}else{
-				
+				posRabo++;
+				count++;
+				aux++;
 			}
 
 		}
 		catch(NumberFormatException nf){
-			JOptionPane.showMessageDialog(null, "Conteúdo apenas composto por números!", 
+				JOptionPane.showMessageDialog(null, "Conteúdo apenas composto por números!", 
 										  "Error", ERROR_MESSAGE);
+			
 		}
 		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Posição Inválida! Próxima posição " + aux + "!", 
-					  					  "Error", ERROR_MESSAGE);
+			if(existeS == false){
+				if(cheioS){
+					cheioS = false;
+					JOptionPane.showMessageDialog(null, "Próxima posição " + aux + "!", 
+		  					  "Error", ERROR_MESSAGE);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Estrutura Cheia...Tente excluir algum valor antes!", 
+							  "Error", ERROR_MESSAGE);
+				}
+				
+			}
+			if(existeS){
+				existeS = false;
+				JOptionPane.showMessageDialog(null, "Elemento já existe na estrutura!", 
+	  					  "Error", ERROR_MESSAGE);
+			}
 		}
 	}
 	
 	public static void removeTela(int pos) {
+		tiraPesquisa();
 		try {
 			Object j = lista.remove(pos);
 			if(j == null) {
@@ -259,59 +284,124 @@ public class ListaSeqScreen implements Screen, TextInputListener{
 			}
 			else
 			{
+				valorRem = Integer.parseInt((String) j);
+				for(int i = 0; i < existe.length; i++){
+					if(existe[i] == valorRem){
+						existe[i] = -1;
+						break;
+					}
+				}
 				posRabo--;
+				count--;
 				aux--;
 			}
 		}
 		catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
 										  "Error", ERROR_MESSAGE);
-			
-			game.setScreen(new ListaSeqScreen(game));
 		}		
 	}
+	
+	
 	public static void Pesquisa(String text) {
 		pesquisa = text;
 		try{
-			for(int i = 1; i <= lista.tamanho(); i++){				
-				if(pesquisa.equals(String.valueOf(lista.elemento(i)))){
-					
+			int valorConvertido = Integer.parseInt(text);
+			if(valorConvertido < 0) throw new Exception();
+			for(int i = 0; i < existe.length; i++) {
+				if(existe[i] == valorConvertido) {
+					elementoExiste = true;
 				}
-				
-				else{				
-				font[i - 1].setColor(Color.valueOf("b7b7b7"));
+			}
+			
+			if(elementoExiste == false) {
+				throw new Exception();
+			}
+			
+			elementoExiste = false;
+			
+			for(int i = 1; i <= lista.tamanho(); i++){				
+				if(pesquisa.equals(String.valueOf(lista.elemento(i)))){	
+				}else{				
+					font[i - 1].setColor(Color.valueOf("b7b7b7"));
 				}				
 			}
+			for(int j = 1; j <= lista.tamanho(); j++) {
+				if(pesquisa.equals(lista.elemento(j))){
+					font[j - 1].setColor(Color.valueOf("7fff00"));				
+					break;
+				}else{							
+					font[j - 1].setColor(Color.valueOf("7fff00"));
+					Thread.sleep(1000);
+					font[j - 1].setColor(Color.valueOf("b7b7b7"));
+				}
+			}		
+		}
+		catch(NumberFormatException nf){
+			JOptionPane.showMessageDialog(null, "A estrutura apenas possui números!", 
+					  "Error", ERROR_MESSAGE);
+		} 
+		
+		catch (Exception e) {
+			elementoExiste = false;
+			JOptionPane.showMessageDialog(null, "Não foi possível achar o valor inserido!", 
+					  "Error", ERROR_MESSAGE);
+		}
+	}
+	
+	public static void tiraPesquisa(){//Esse Método será iniciado a cada ação da lista, zerando a marcação da pesquisa
+		try{
+			for(int i = 1; i <= lista.tamanho(); i++){				
+				font[i - 1].setColor(Color.valueOf("b7b7b7"));
+					
+			}
+			pesquisa = null;
 			}catch(Exception g){				
 			}
-		
-			
+	}
 	
-		for(int j = 1; j <= lista.tamanho(); j++) {
-			try {
-			if(pesquisa.equals(lista.elemento(j))){
-				font[j - 1].setColor(Color.valueOf("7fff00"));				
-				break;
-			}else{							
-				font[j - 1].setColor(Color.valueOf("7fff00"));
-				Thread.sleep(1000);
-				font[j - 1].setColor(Color.valueOf("b7b7b7"));
-	}
-	}catch(Exception f){
-		
-	}
-		}		
-	
-	}
-
 
 	@Override
 	public void input(String text) {
-		int n = Integer.parseInt(text); //Precisa tratar o erro quando o fdp coloca numeros aqui
-		lista = new ListaSeqGen(n,quadVazio, quadValido);
+		try{
+			if(isNumber(text)){
+				int n = Integer.parseInt(text);
+				existe = new int[n];
+				
+				for(int i = 0; i < existe.length; i++){
+					existe[i] = -1;
+				}
+				
+				lista = new ListaSeqGen(n,quadVazio, quadValido);
+			}
+			else
+			{
+				throw new Exception();
+			}
+		}catch(Exception n) {
+			JOptionPane.showMessageDialog(null, "Estrutura Limitada! Apenas seram aceitos números entre 1 e 20!", 
+					"Error", 
+					ERROR_MESSAGE);	
+			Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
+		}	
 	}
 
-
+	public static boolean existeP(int valor){
+		for(int i = 0; i < existe.length; i++){
+			if(existe[i] == valor){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isNumber(String text) throws Exception {
+		int number = Integer.parseInt(text);
+		if((number < 1) || (number > 20)){
+			return false;
+		}
+			return true;
+	}
 	@Override
 	public void canceled() {
 		// TODO Auto-generated method stub

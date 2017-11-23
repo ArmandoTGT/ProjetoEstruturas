@@ -125,12 +125,7 @@ public class LDEGen<T> {
 	        cont++;
 	        
 	    }
-	        return aux.getQuad();
-	    
-	    
-		
-
-	   
+	        return aux.getQuad();	
 	}
 
 	/**Retorna a posição de um elemento pesquisado.

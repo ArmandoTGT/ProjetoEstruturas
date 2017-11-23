@@ -28,15 +28,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PilhaScreen implements Screen, TextInputListener{
 	
-	
-
-
 	private static int posRabo;
 	private static Executor game;
 	private OrthographicCamera camera;
 	private Viewport port;
 	private PilhaHud hud; // Interface de interação com o usuuário(hud) que fica encima da nossa screen
-	
 	private static int elementos; //Total de elementos que serão mostrados na tela
 	private Texture quadValido;
 	private Texture quadVazio;
@@ -45,9 +41,10 @@ public class PilhaScreen implements Screen, TextInputListener{
 	static BitmapFont font2[];
 	private static PilhaSeq pilha;
 	private static int posi[];
-	static int aux = 0;
+	static int aux = 0, count = 0, valorRem;
+	static int[] existe;
 	static String pesquisa;
-	public static boolean exit;
+	public static boolean exit, existeS = false, negativo = false, elementoExiste = false, completo = false;
 	
 
 	/*
@@ -60,7 +57,7 @@ public class PilhaScreen implements Screen, TextInputListener{
 		quadValido = new Texture("coisa/quadradoPilhaPreenchido.png");
 		quadVazio = new Texture("coisa/quadradoPilhaVazio.png");
 		cabeca = new Texture("coisa/PonteiroTopo.png");
-		Gdx.input.getTextInput(this, "Lista Sequencial", "", "Tamanho da estrutura");
+		Gdx.input.getTextInput(this, "Pilha Sequencial", "", "Tamanho da estrutura");
 		pilha = new PilhaSeq(quadValido, quadVazio);
 		posi = new int[21];
 
@@ -230,7 +227,13 @@ public class PilhaScreen implements Screen, TextInputListener{
 		try {
 			
 			if(isNumber(text)) {
-				elementos = Integer.parseInt(text);		
+				elementos = Integer.parseInt(text);
+				existe = new int[elementos];
+				
+				for(int i = 0; i < existe.length; i++){
+					existe[i] = -1;
+				}
+				
 			}
 			else 
 			{
@@ -261,16 +264,34 @@ public class PilhaScreen implements Screen, TextInputListener{
 	 */
 	
 	public static void insereTela(String valor) {
+		tiraPesquisa();
 		try {
+			if(count == existe.length){
+				completo = true;
+				throw new Exception();
+			}
 			//Gera exceção caso o usuário tente passar o número de elementos da pilha!
-			if((pilha.top() == "null") && (aux == elementos)) {
+			if((pilha.top() == null) && (aux == elementos)) {
 				throw new Exception();
 			}
 			
 			int n = Integer.parseInt(valor);//Gera uam exceção caso o valor do conteúdo não for um inteiro
+			
+			if(n < 1){
+				negativo = true;
+				throw new Exception();
+			}
+			
+			if(existeP(n)){
+				existeS = true;
+				throw new Exception();
+			}
+			existe[count] = n;
 			pilha.push(valor);//Inserimos na posição inicial um novo valor
 			//Aumentamos a quantidade de quadrados que serão mostrados como adicionados ao usuário
 			posRabo++;
+			aux++;
+			count++;
 			posi[posRabo - 1] = posRabo;
 			
 		}
@@ -279,22 +300,48 @@ public class PilhaScreen implements Screen, TextInputListener{
 										  "Error", ERROR_MESSAGE);
 		}
 		catch(Exception e){
+			if((existeS == false) && (negativo == false) && (completo == false)){
 			JOptionPane.showMessageDialog(null, "Posição Inválida! Digite uma posição entre 1 e " + elementos + "!", 
 										  "Error", ERROR_MESSAGE);
+			}
+			if(completo){
+				completo = false;
+				JOptionPane.showMessageDialog(null, "Estrutura Cheia...Tente excluir algum valor antes!", 
+						  "Error", ERROR_MESSAGE);
+			}
+			if(negativo){
+				negativo = false;
+				JOptionPane.showMessageDialog(null, "Insira um valor maior que Zero!", 
+						  "Error", ERROR_MESSAGE);
+			}
+			if(existeS){
+				existeS = false;
+				JOptionPane.showMessageDialog(null, "Elemento Já existe na estrutura!", 
+											  "Error", ERROR_MESSAGE);
+			}
 		}	
 	}
 	
 	public static void removeTela() {
+		tiraPesquisa();
+		String auxS = pilha.pop();
 		try {
-			String auxS = pilha.pop(); //Manterá o valor daquilo que acabou de ser excluido da pilha
+			//Manterá o valor daquilo que acabou de ser excluido da pilha
 			if((auxS.equals("null")) && (aux == 0)) {
 				throw new Exception();
 			} 
 			else
 			{
-				System.out.println(auxS); //Removemos o valor salvo na última posição
+				valorRem = Integer.parseInt(auxS);
+				for(int i = 0; i < existe.length; i++){
+					if(existe[i] == valorRem){
+						existe[i] = -1;
+						break;
+					}
+				}
 				//Diminuimos a quantidade de quadrados que serão mostrados como adicionados ao usuario
 				posRabo--;
+				count--;
 				aux--;
 				posi[posRabo] = posRabo;
 			}
@@ -302,40 +349,65 @@ public class PilhaScreen implements Screen, TextInputListener{
 		catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
 										  "Error", ERROR_MESSAGE);
-			game.setScreen(new PilhaScreen(game));
 		}
 	}
 	
 	public static void Pesquisa(String text){
 		pesquisa = text;
-		
-		for(int i = 0; i <= 20; i++) {
-			 
+		try{
 			
-			font[i].setColor(Color.valueOf("b7b7b7"));
-			  }
-		
-		
-		
-		for(int i = pilha.tamanho() -1 ; i >= 0; i--) {
-			//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
-			//	se for 	igual alteramos a cor da fonte
-				try {
-					System.out.println(i);
-			if(pesquisa.equals(pilha.conteudo(i))) {
-				font[i + 1].setColor(Color.valueOf("7fff00"));
-				break;
-			}else {
-				font[i + 1].setColor(Color.valueOf("7fff00"));
-				Thread.sleep(1000);
-				font[i + 1].setColor(Color.valueOf("b7b7b7"));
+			int valorConvertido = Integer.parseInt(text);
+			if(valorConvertido < 0) throw new Exception();
+			for(int i = 0; i < existe.length; i++) {
+				if(existe[i] == valorConvertido) {
+					elementoExiste = true;
+				}
 			}
-				}catch (Exception f){
-				System.out.println("catch");
+			
+			if(elementoExiste == false) {
+				throw new Exception();
 			}
+			
+			elementoExiste = false;
+			
+			for(int i = 0; i <= 20; i++) {
+				font[i].setColor(Color.valueOf("b7b7b7"));
 			}
+		
+			for(int i = pilha.tamanho() -1 ; i >= 0; i--) {
+				//A baixo comparamos a string de conteudo com a string que recebemos do metodo de pesquisa,
+				//	se for 	igual alteramos a cor da fonte
+				if(pesquisa.equals(pilha.conteudo(i))) {
+					font[i + 1].setColor(Color.valueOf("7fff00"));
+					break;
+				}else{
+					font[i + 1].setColor(Color.valueOf("7fff00"));
+					Thread.sleep(1000);
+					font[i + 1].setColor(Color.valueOf("b7b7b7"));
+				}
+			}
+		}
+		catch(NumberFormatException nf){
+			JOptionPane.showMessageDialog(null, "A estrutura apenas possui números!", 
+					  "Error", ERROR_MESSAGE);
+		} 
+		catch (Exception e) {
+			elementoExiste = false;
+			JOptionPane.showMessageDialog(null, "Não foi possível achar o valor inserido!", 
+					  "Error", ERROR_MESSAGE);
+		}
 	}
 	
+	public static void tiraPesquisa(){//Esse Método será iniciado a cada ação da pilha, zerando a marcação da pesquisa
+		try{
+			for(int i = 1; i <= pilha.tamanho(); i++){				
+				font[i].setColor(Color.valueOf("b7b7b7"));
+					
+			}
+			pesquisa = null;
+			}catch(Exception g){				
+			}
+	}
 	
 	/*
 	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
@@ -348,5 +420,12 @@ public class PilhaScreen implements Screen, TextInputListener{
 			return true;
 	}
 	
-	
+	public static boolean existeP(int valor){
+		for(int i = 0; i < existe.length; i++){
+			if(existe[i] == valor){
+				return true;
+			}
+		}
+		return false;
+	}
 }

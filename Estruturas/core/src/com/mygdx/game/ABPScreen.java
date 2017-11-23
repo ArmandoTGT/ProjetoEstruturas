@@ -35,15 +35,21 @@ public class ABPScreen implements Screen{
 	private OrthographicCamera camera;
 	private Viewport port;
 	private ABPHud hud;
+	static int aux = 0, count = 0, valorRem;
+	static int[] existe = new int[20];
+	public static boolean negativo = false, elementoExiste = false, completo = false;
 	
 	//Atributos relacionados a construção gráfica da arvore
 	static ABP arvore;
 	static Texture quadValido;
-	
 	static Texture quadDireita1;
 	static Texture quadEsquerda1;
 	static Texture quadDireita2;
 	static Texture quadEsquerda2;
+	static Texture quadDireita3;
+	static Texture quadEsquerda3;
+	static Texture quadDireita4;
+	static Texture quadEsquerda4;
 	static Texture raiz;
 	private static int raizAux, indice, x, y, insereAux[];
 	private static NoABP no;
@@ -70,12 +76,20 @@ public class ABPScreen implements Screen{
 		insereAux = new int[20];
 		posicaoAux = 0;
 		quadValido = new Texture("coisa/BlocoArvoreRaiz.png");
-		//Precisa arrumar as setas e a raiz
 		
+		for(int i = 0; i < existe.length; i++){
+			existe[i] = -1;
+		}
+		
+		//Precisa arrumar as setas e a raiz
 		quadDireita1 = new Texture("coisa/BlocoArvoreNv1Direita.png");
 		quadEsquerda1 = new Texture("coisa/BlocoArvoreNv1Esquerda.png");
 		quadDireita2 = new Texture("coisa/BlocoArvoreNv2Direita.png");
 		quadEsquerda2 = new Texture("coisa/BlocoArvoreNv2Esquerda.png");
+		quadDireita3 = new Texture("coisa/BlocoArvoreNv3Direita.png");
+		quadEsquerda3 = new Texture("coisa/BlocoArvoreNv3Esquerda.png");
+		quadDireita4 = new Texture("coisa/BlocoArvoreNv4Direita.png");
+		quadEsquerda4 = new Texture("coisa/BlocoArvoreNv4Esquerda.png");
 		raiz = new Texture("coisa/PonteiroCabeça.png");
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		
@@ -97,11 +111,13 @@ public class ABPScreen implements Screen{
 		  font2.setColor(Color.valueOf("b7b7b7"));		  
 		  generator2.dispose();
 		  
-		arvore = new ABP(quadValido, quadDireita1, quadEsquerda1, quadDireita2, quadEsquerda2);
+		arvore = new ABP(quadValido, quadDireita1, quadEsquerda1, quadDireita2, quadEsquerda2, quadDireita3, quadEsquerda3, quadDireita4, quadEsquerda4);
 		camera = new OrthographicCamera();
 		port = new FitViewport(Executor.V_WIDTH, Executor.V_HEIGHT, camera);
 		this.game = game;
-		hud = new ABPHud(game.balde, game);		
+		hud = new ABPHud(game.balde, game);	
+		
+		camera.zoom = (float) 1.5;
 	
 	}
 
@@ -129,7 +145,7 @@ public class ABPScreen implements Screen{
 		}
 		if(!arvore.vazia()) {
 			
-			arvore.raiz().setX(-200);
+			arvore.raiz().setX(-65);
 			arvore.raiz().setY(150);
 			
 			game.balde.draw(arvore.raiz().getQuad(), arvore.raiz().getX(), arvore.raiz().getY());
@@ -215,15 +231,15 @@ private int contaNv(int prof) {
 			return 300;
 		}
 		if(prof == 3) {
-			return 1;
+			return 150;
 		}
 		if(prof == 4) {
 			
-			return 1;			
+			return 200;			
 		}
 		
 		else {
-			return 1;
+			return 150;
 		}
 		
 	}
@@ -245,7 +261,7 @@ private int contaNv(int prof) {
 		}
 		if (Gdx.input.isKeyPressed(Keys.Q)) {
 			camera.zoom -= 0.02;			
-			if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
+			//if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
 		}
 		
 		
@@ -307,59 +323,145 @@ private int contaNv(int prof) {
 		exit = true;		
 	}
 	
-	public static void insereTela(int valor) {
+	public static void insereTela(String valor) {
+		try {
+			tiraPesquisa();
+			if(count == existe.length){
+				completo = true;
+				throw new Exception();
+			}
+			int valorConvertido = Integer.parseInt(valor);//Gera uam exceção caso o valor do conteúdo não for um inteiro
+				if(valorConvertido < 0) {
+					negativo = true;
+					throw new Exception();
+				}
+				if(existeP(valorConvertido)){
+					throw new Exception();
+				}
+				
+				existe[count] = valorConvertido;
+				arvore.insere(valorConvertido);
+				nos[cont] = arvore.ultimoNo;
 		
-		
-		arvore.insere(valor);
-		nos[cont] = arvore.ultimoNo;
-		
-		insereAux[cont] = valor;
-		
-		cont++;
+				insereAux[cont] = valorConvertido;
+				count++;
+				cont++;
+		}
+		catch(NumberFormatException nf){
+			JOptionPane.showMessageDialog(null, "Conteúdo composto apenas por números!", 
+					  "Error", ERROR_MESSAGE);
+		}
+		catch(Exception e){
+			if((negativo == false) && (completo == false)) {
+				JOptionPane.showMessageDialog(null, "Elemento Já existe na estrutura!", 
+						  "Error", ERROR_MESSAGE);
+			}
+			if(completo){
+				completo = false;
+				JOptionPane.showMessageDialog(null, "Árvore Completa!", 
+						  "Error", ERROR_MESSAGE);
+			}
+			if(negativo) {
+				negativo = false;
+				JOptionPane.showMessageDialog(null, "Insira um valor maior que Zero!", 
+						  "Error", ERROR_MESSAGE);
+			}
+		}	
 	}
 	
 
 
 	public static void Pesquisa(String text) {
 		pesquisa = text;
-		arvore.buscaPesq(Integer.parseInt(text));
-				
-		for(int i = 0; i <= 20; i++) {
-			font[i].setColor(Color.valueOf("b7b7b7"));
-		}
-			
-		try {
-			for(int i = 0; i < arvore.cont; i++){
-			for(int j = 0; j <= arvore.tamanho(); j++) {
-			if(arvore.busca(arvore.tent[i]).getConteudo() == arvore.busca(insereAux[j]).getConteudo()) {
-				font[j].setColor(Color.valueOf("7fff00"));
-				Thread.sleep(1000);
-				font[j].setColor(Color.valueOf("b7b7b7"));
-				break;
-			}
-			}
-			
-			}
-			
-			}catch(Exception f){
-			
-			}
-		try {
-			for(int i = 0; i <= arvore.tamanho(); i++) {
-				if(pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))){
-					font[i].setColor(Color.valueOf("7fff00"));					
+		try {			
+			int valorConvertido = Integer.parseInt(text);
+			for(int i = 0; i < existe.length; i++) {
+				if(existe[i] == valorConvertido) {
+					elementoExiste = true;
 					break;
 				}
 			}
-		}catch(Exception g){
+			
+			arvore.buscaPesq(Integer.parseInt(text));
+			
+			for (int i = 0; i <= 20; i++) {
+				font[i].setColor(Color.valueOf("b7b7b7"));
+			}
+			
+			for (int i = 0; i < arvore.cont; i++) {
+				for (int j = 0; j <= arvore.tamanho(); j++) {
+					if (arvore.busca(arvore.tent[i]).getConteudo() == arvore.busca(insereAux[j]).getConteudo()) {
+						font[j].setColor(Color.valueOf("7fff00"));
+						Thread.sleep(1000);
+						font[j].setColor(Color.valueOf("b7b7b7"));
+						break;
+					}
+				}
+			}
+			
+			if(valorConvertido < 0) throw new Exception();
+			
+			if(elementoExiste == false) {
+				throw new Exception();
+			}
+			
+			elementoExiste = false;
+			
+			for (int i = 0; i <= arvore.tamanho(); i++) {
+				if (pesquisa.equals(String.valueOf(arvore.busca(insereAux[i]).getConteudo()))) {
+					font[i].setColor(Color.valueOf("7fff00"));
+					break;
+				}
+			}
 			
 		}
-		arvore.cont = 0;
-		for(int i = 0; i < 20; i++){
-			arvore.tent[i] = 0;
+		catch(NumberFormatException nf){
+			JOptionPane.showMessageDialog(null, "A estrutura apenas possui números!", 
+					  "Error", ERROR_MESSAGE);
+		} 
+		
+		catch (Exception e) {
+			elementoExiste = false;
+			JOptionPane.showMessageDialog(null, "Não foi possível achar o valor inserido!", 
+					  "Error", ERROR_MESSAGE);
 		}
 		
-		
-		
+		arvore.cont = 0;
+		for (int i = 0; i < 20; i++) {
+			arvore.tent[i] = 0;
+		}
 	}
+	
+	//Esse Método será iniciado a cada ação da arvore de pesquisa binária, zerando a marcação da pesquisa
+	public static void tiraPesquisa(){
+		try{
+			for(int i = 1; i <= arvore.tamanho(); i++){				
+				font[i - 1].setColor(Color.valueOf("b7b7b7"));
+					
+			}
+			pesquisa = null;
+			}catch(Exception g){				
+			}
+	}
+	
+	/*
+	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
+	 */
+	public static boolean isNumber(String text) throws Exception {
+		int number = Integer.parseInt(text);
+		if((number < 1) || (number > 20)){
+			return false;
+		}
+			return true;
+	}
+	
+	public static boolean existeP(int valor){
+		for(int i = 0; i < existe.length; i++){
+			if(existe[i] == valor){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

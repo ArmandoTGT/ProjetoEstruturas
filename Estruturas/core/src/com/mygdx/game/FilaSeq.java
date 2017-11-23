@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class FilaSeq {
 	private String dados[];
-	private boolean escrito[]; //Vai simbolizar se algo foi escrito naquele quadrado ou não
+	//escrito - Vai simbolizar se algo foi escrito naquele quadrado ou não
+	//igual - quando tentar excluir na mesma posição em que foi adicionado pela última vez
+	private boolean escrito[], igual;
 	private int inicio;
 	private int fim;
 	
@@ -18,7 +20,7 @@ public class FilaSeq {
 		inicio = 0;
 		fim = -1;
 		nElementos = 0;
-		
+		igual = false;
 		tamMax = 100;
 		dados =  new String[tamMax];
 		
@@ -32,11 +34,10 @@ public class FilaSeq {
 	}
 	
 	public FilaSeq(int n,Texture quadValido, Texture quadVazio) {
-		System.out.println("Sendo chamado aqui");
 		inicio = 0;
 		fim = -1;
 		nElementos = 0;
-		
+		igual = false;
 		tamMax = n;
 		dados =  new String[tamMax];
 		
@@ -76,6 +77,11 @@ public class FilaSeq {
 	public int fim(){ //Dará a posição do ponteiro do fim
 		return fim;
 	}
+	
+	public int tamMax() {
+		return tamMax;
+	}
+	
 	/**Verifica se a Fila estÃ¡ cheia */
 	public boolean cheia () {
 		if (nElementos == tamMax)
@@ -104,11 +110,22 @@ public class FilaSeq {
 		if (cheia()){
 			return false;
 		}
-		fim = (fim + 1) % tamMax; // Circularidade
-		escrito[fim] = true; //Simboliza que aquela posição foi apagada
-		quads[fim] = quadValido; //Representação gráfica de que foi adicionado
-	    dados[fim] = valor;
-		nElementos++;
+		if(igual == true) {
+			igual = false;
+			fim--;
+			fim = (fim + 1) % tamMax; // Circularidade
+			escrito[fim] = true; //Simboliza que aquela posição foi apagada
+			quads[fim] = quadValido; //Representação gráfica de que foi adicionado
+		    dados[fim] = valor;
+			nElementos++;
+		}
+		else {
+			fim = (fim + 1) % tamMax; // Circularidade
+			escrito[fim] = true; //Simboliza que aquela posição foi apagada
+			quads[fim] = quadValido; //Representação gráfica de que foi adicionado
+		    dados[fim] = valor;
+			nElementos++;
+		}
 		return true;
 	}
 
@@ -116,12 +133,15 @@ public class FilaSeq {
 	    Retorna -1 se a fila estiver vazia.*/
 	public String remove() {
 		if (vazia())
-			return "null";
+			return null;
 	
-		String res = primeiro();
+		String res = primeiro();	
+		dados[inicio] = "-1";
 		escrito[inicio] = false; //Foi apagado algo naquela posição
 		quads[inicio] = quadVazio; //Aqui a representação gráfica de que foi apagado
-		inicio = (inicio + 1) % tamMax; //Circularidade 
+		//Maritan tava errado aqui
+		if(inicio == fim) igual = true; //Indica que ouve uma tentativa de deletar quando o inicio e o fim iguais
+		else inicio = (inicio + 1) % tamMax; //Circularidade só deve acontacer quando o inicio é diferente do fim, se não o inicio pula o fim
 		nElementos--;
 		return res;
 	}

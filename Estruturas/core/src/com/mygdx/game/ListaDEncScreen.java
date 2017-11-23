@@ -27,13 +27,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ListaDEncScreen implements Screen{
 	
+
 	private static Executor game;
 	private static Random posicao; //Como java aloca onde na memória será salvo, o random representará essa aleatoriedade
 	private static int posicaoAux;
 	private OrthographicCamera camera;
 	private Viewport port;
 	private ListaDEncHud hud;
-	
 	private static LDEGen lista;
 	static Texture quadValido;
 	static Texture quadVazio;
@@ -43,9 +43,10 @@ public class ListaDEncScreen implements Screen{
 	private static int posRabo;
 	static BitmapFont font[];
 	static BitmapFont font2;
-	static int aux = 1;
+	static int aux = 1, count = 0, valorRem;
+	static int[] existe = new int[20];
 	static String pesquisa;
-	public static boolean exit;
+	public static boolean exit, existeS = false, negativo = false, elementoExiste = false, cheioS = false;
 
 	/*
 	 * Todos os textures precisam ser construidos
@@ -62,6 +63,10 @@ public class ListaDEncScreen implements Screen{
 		setaEsquerda = new Texture("coisa/SetaDuplaEsquerda.png");
 		cabeca = new Texture("coisa/PonteiroCabeça.png");
 		rabo = new Texture("coisa/PonteiroCauda.png");
+		
+		for(int i = 0; i < existe.length; i++){
+			existe[i] = -1;
+		}
 		
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
@@ -115,7 +120,7 @@ public class ListaDEncScreen implements Screen{
 		game.balde.draw(cabeca, -640, 120);	
 		
 		if(exit) {
-			System.out.println("chegou");	
+				
 			this.dispose();
 			
 		}
@@ -133,6 +138,7 @@ public class ListaDEncScreen implements Screen{
 				
 			}
 			if(posRabo != 0) game.balde.draw(rabo, -640 + 160 + (320 * (posRabo - 1)), -195);
+			else game.balde.draw(rabo, -640 + 160 + (320 * (posRabo)), -195);
 		/*
 		 * Esse for fará uma seta antes do bloco inicial, pois ele será a seta 
 		 * voltando e terá seu numero igual ao número de blocos
@@ -226,6 +232,9 @@ public class ListaDEncScreen implements Screen{
 	}
 	
 	public static void sair() {
+		for(int i = 0; i < existe.length; i++) {
+			existe[i] = -1;
+		}
 		exit = true;		
 	}
 	
@@ -235,7 +244,12 @@ public class ListaDEncScreen implements Screen{
 	 */
 	
 	public static void insereTela(int pos, String valor) {
+		tiraPesquisa();
 		try {
+			if(count == 20){
+				cheioS = true;
+				throw new Exception();
+			}
 			//Verifica se o valor está dentro do padrão
 			if((pos < 1) || (pos > 20)) {
 				throw new Exception();
@@ -245,8 +259,19 @@ public class ListaDEncScreen implements Screen{
 			}
 
 			int n = Integer.parseInt(valor);
+			if(n < 0){
+				negativo = true;
+				throw new Exception();
+			}
+			if(existeP(n)){
+				existeS = true;
+				throw new Exception();
+			}
+			
 			lista.insere(pos, valor);
+			existe[count] = n;
 			posRabo++;
+			count++;
 			aux++;
 
 		}
@@ -255,12 +280,30 @@ public class ListaDEncScreen implements Screen{
 										  "Error", ERROR_MESSAGE);
 		}
 		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Posição Inválida! Próxima posição " + aux + "!", 
-					  					  "Error", ERROR_MESSAGE);
+				if((existeS == false) && (negativo == false) && (cheioS == false)){
+					JOptionPane.showMessageDialog(null, "Posição Inválida! Próxima posição " + aux + "!", 
+	  					  "Error", ERROR_MESSAGE);
+				}
+				if(cheioS) {
+					cheioS = false;
+					JOptionPane.showMessageDialog(null, "Lista Cheia...Tente excluir algum valor antes!", 
+											  "Error", ERROR_MESSAGE);
+				}
+				if(negativo) {
+					negativo = false;
+					JOptionPane.showMessageDialog(null, "Lista composta apenas por números maiores que Zero!", 
+											  "Error", ERROR_MESSAGE);
+				}
+				if(existeS){
+					existeS = false;
+					JOptionPane.showMessageDialog(null, "Elemento Já existe na estrutura!", 
+												  "Error", ERROR_MESSAGE);
+				}
 		}
 	}
 	
 	public static void removeTela(int pos) {
+		tiraPesquisa();
 		try {
 			Object j = lista.remove(pos);
 			if(j == null) {
@@ -268,21 +311,38 @@ public class ListaDEncScreen implements Screen{
 			}
 			else
 			{
+				valorRem = Integer.parseInt((String) j);
+				for(int i = 0; i < existe.length; i++){
+					if(existe[i] == valorRem){
+						existe[i] = -1;
+						break;
+					}
+				}
 				posRabo--;
+				count--;
 				aux--;
 			}
 		}
 		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!", 
-										  "Error", ERROR_MESSAGE);
-			
-			game.setScreen(new ListaDEncScreen(game));
+			JOptionPane.showMessageDialog(null, "Não se pode remover o que não existe!");
 		}		
 	}
 	public static void Pesquisa(String text) {
 		pesquisa = text;		
 		int aux = 0;
 		try{
+			int valorConvertido = Integer.parseInt(text);
+			if(valorConvertido < 0) throw new Exception();
+			for(int i = 0; i < existe.length; ) {
+				if(existe[i] == valorConvertido) {
+					elementoExiste = true;
+				}
+				i++;
+			}
+			if(elementoExiste == false) {
+				throw new Exception();
+			}
+			elementoExiste = false;
 			for(int i = 1; i <= lista.tamanho(); i++){				
 				if(pesquisa.equals(String.valueOf(lista.elemento(i)))){
 					aux = i;
@@ -292,13 +352,11 @@ public class ListaDEncScreen implements Screen{
 				font[i - 1].setColor(Color.valueOf("b7b7b7"));
 				}				
 			}
-			}catch(Exception g){				
-			}
+			
 		
 		
 		if(aux > lista.tamanho()/2){
 			for(int j = lista.tamanho(); j >= 1; j--) {
-				try {
 				if(pesquisa.equals(String.valueOf(lista.elemento(j)))){
 					font[j - 1].setColor(Color.valueOf("7fff00"));				
 					break;
@@ -307,28 +365,67 @@ public class ListaDEncScreen implements Screen{
 					Thread.sleep(1000);
 					font[j - 1].setColor(Color.valueOf("b7b7b7"));
 		}
-		}catch(Exception f){
-			
-		}
+		
 			}
 		}	
 		
 			
-	if(aux <= lista.tamanho()/2){
-		for(int j = 1; j <= lista.tamanho(); j++) {
-			try {
-			if(pesquisa.equals(String.valueOf(lista.elemento(j)))){
-				font[j - 1].setColor(Color.valueOf("7fff00"));				
-				break;
-			}else{							
-				font[j - 1].setColor(Color.valueOf("7fff00"));
-				Thread.sleep(1000);
-				font[j - 1].setColor(Color.valueOf("b7b7b7"));
-	}
-	}catch(Exception f){
-		
-	}
+		if(aux <= lista.tamanho()/2){
+			for(int j = 1; j <= lista.tamanho(); j++) {
+					if(pesquisa.equals(String.valueOf(lista.elemento(j)))){
+						font[j - 1].setColor(Color.valueOf("7fff00"));				
+						break;
+					}else{							
+						font[j - 1].setColor(Color.valueOf("7fff00"));
+						Thread.sleep(1000);
+						font[j - 1].setColor(Color.valueOf("b7b7b7"));
+					}
+				
+			}
 		}
+	}catch(NumberFormatException nf){
+		tiraPesquisa();
+		JOptionPane.showMessageDialog(null, "A estrutura apenas possui números!", 
+				  "Error", ERROR_MESSAGE);
+	} 
+	catch (Exception e) {
+		elementoExiste = false;
+		tiraPesquisa();
+		JOptionPane.showMessageDialog(null, "Não foi possível achar o valor inserido!", 
+				  "Error", ERROR_MESSAGE);
 	}
 	}
+	
+	
+	public static void tiraPesquisa(){//Esse Método será iniciado a cada ação da lista, zerando a marcação da pesquisa
+		try{
+			for(int i = 1; i <= lista.tamanho(); i++){				
+				font[i - 1].setColor(Color.valueOf("b7b7b7"));
+					
+			}
+			pesquisa = null;
+			}catch(Exception g){				
+			}
+	}
+	
+	/*
+	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
+	 */
+	public boolean isNumber(String text) throws Exception {
+		int number = Integer.parseInt(text);
+		if((number < 1) || (number > 20)){
+			return false;
+		}
+			return true;
+	}
+	
+	public static boolean existeP(int valor){
+		for(int i = 0; i < existe.length; i++){
+			if(existe[i] == valor){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

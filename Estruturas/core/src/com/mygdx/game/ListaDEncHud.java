@@ -1,5 +1,9 @@
 package com.mygdx.game;
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.graphics.Color;
@@ -24,7 +28,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ListaDEncHud implements Disposable, TextInputListener{
 	private int elementos; //Nos ajudará na lógica de adicionar e remover
-	private boolean delete;//bollean e merda
+	private boolean delete, inseriu = false, negativo = false;//boolean
 	private int opcao;
 	
 	public Stage stage;
@@ -92,7 +96,6 @@ public class ListaDEncHud implements Disposable, TextInputListener{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				System.out.println("chegou no clique");
 				if(elementos == 0) {
 					Gdx.input.getTextInput(ListaDEncHud.this, "Adicionar", "", "Conteudo");
 				}
@@ -127,9 +130,11 @@ public class ListaDEncHud implements Disposable, TextInputListener{
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					elementos--; //Permitirá excluir
-					delete = true;
-					Gdx.input.getTextInput(ListaDEncHud.this, "Remover", "", "Posição");
+					if(elementos > 0) {
+						delete = true;
+						Gdx.input.getTextInput(ListaDEncHud.this, "Remover", "", "Posição");
+					}
+					else JOptionPane.showMessageDialog(null, "Adicione algo antes de remover!");
 				}    	 
 	     	});
 	     stage.addActor(buttonRemove);
@@ -167,23 +172,23 @@ public class ListaDEncHud implements Disposable, TextInputListener{
 
 	     fontPesq = new BitmapFont();
 	     skinPesq = new Skin();
-	     buttonAtlasPesq = new TextureAtlas("Botões/RemoveImg.pack");
+	     buttonAtlasPesq = new TextureAtlas("Botões/Pesquisa.pack");
 	     skinPesq.addRegions(buttonAtlasPesq);
 	     textButtonStylePesq = new TextButtonStyle();
 	     textButtonStylePesq.font = fontPesq;
-	     textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
-	     textButtonStylePesq.down = skinPesq.getDrawable("RemoverPressionado");
-	     textButtonStylePesq.checked = skinPesq.getDrawable("RemoverNormal");
+	     textButtonStylePesq.up = skinPesq.getDrawable("PesquisarNormal");
+	     textButtonStylePesq.down = skinPesq.getDrawable("PesquisarPressionado");
+	     textButtonStylePesq.checked = skinPesq.getDrawable("PesquisarNormal");
 	     Button buttonPesq = new TextButton(" ", textButtonStylePesq);
 	     buttonPesq.addListener(new ClickListener() {	    	 
 	    	 	@Override
 				public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-	    		 textButtonStylePesq.up = skinPesq.getDrawable("RemoverNormal");
+	    		 textButtonStylePesq.up = skinPesq.getDrawable("PesquisarNormal");
 					super.exit(event, x, y, pointer, toActor);
 				}
 				@Override
 				public boolean mouseMoved(InputEvent event, float x, float y) {
-					textButtonStylePesq.up = skinPesq.getDrawable("RemoverSelecionado");
+					textButtonStylePesq.up = skinPesq.getDrawable("PesquisarSelecionado");
 					return super.mouseMoved(event, x, y);
 				}
 				@Override
@@ -219,24 +224,64 @@ public class ListaDEncHud implements Disposable, TextInputListener{
 	@Override
 	public void input(String text) {
 		int pos;
-		if( (elementos == 0) && (delete == false) && (opcao == 0)) {
-			elementos++;
-			ListaDEncScreen.insereTela(1, text);
+		String[] entrada;
+		try {
+			if((elementos == 0) && (delete == false) && (opcao == 0)) {
+				elementos++;
+				if(Integer.parseInt(text) < 0) {
+					negativo = true;
+					throw new Exception();
+				}
+				ListaDEncScreen.insereTela(1, text);
+			}
+			if((elementos > 0) && (delete == false) && (opcao == 0)) {
+				elementos++;
+				entrada = text.split("-"); //------Exceção quando coloca errado
+				if(isNumber(entrada[0])) {
+					inseriu = true;
+					pos = Integer.parseInt(entrada[0]); //-------Exceção elemento diferente de numero
+					ListaDEncScreen.insereTela(Integer.parseInt(entrada[0]), entrada[1]);
+				}
+				else
+				{
+					throw new Exception();
+				}
+			}
+			if((delete == true) && (opcao == 0)) {
+				delete = false;
+				ListaDEncScreen.removeTela(Integer.parseInt(text)); //------Exceção quando coloca diferente de numero
+			}
+			if(opcao == 1){
+				ListaDEncScreen.Pesquisa(text);
+				opcao = 0;
+			}
 		}
-		else if( (elementos > 0) && (delete == false) && (opcao == 0)) {
-			elementos++;
-			String entrada [] = text.split("-"); //------Exceção quando coloca errado
-			pos = Integer.parseInt(entrada[0]); //-------Exceção elemento diferente de numero
-			ListaDEncScreen.insereTela(pos, entrada[1]);
+		catch(NumberFormatException nf) {
+			JOptionPane.showMessageDialog(null, "Posição Inválida!", 
+					  "Error", ERROR_MESSAGE);
 		}
-		else if((delete == true) && (opcao == 0)) {
-			ListaDEncScreen.removeTela(Integer.parseInt(text)); //------Exceção quando coloca diferente de numero
-			delete = false;
+		catch(Exception e) {
+			if((inseriu == false) && (negativo == false)) {
+				JOptionPane.showMessageDialog(null, "Primeiro insira algum valor!", 
+					  "Error", ERROR_MESSAGE);
+			}
+			if(negativo) {
+				negativo = false;
+				JOptionPane.showMessageDialog(null, "Insira um valor maior que Zero!", 
+					  "Error", ERROR_MESSAGE);
+			}
 		}
-		if(opcao == 1){
-			ListaDEncScreen.Pesquisa(text);
-			opcao = 0;
+	}
+	
+	/*
+	 * Método que trata exceção, apenas aceita a entrada de números entre 1 e 20
+	 */
+	public static boolean isNumber(String text) throws Exception {
+		int number = Integer.parseInt(text);
+		if((number < 1) || (number > 20)){
+			return false;
 		}
+			return true;
 	}
 
 	@Override

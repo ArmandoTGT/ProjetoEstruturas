@@ -110,13 +110,18 @@ public class ABP{
 	private Texture quadDireita1;
 	private Texture quadEsquerda2;
 	private Texture quadDireita2;
+	private Texture quadEsquerda3;
+	private Texture quadDireita3;
+	private Texture quadEsquerda4;
+	private Texture quadDireita4;
 	public NoABP ultimoNo;
 	public NoABP dad;
 	public int tent[];
 	public int cont;
 	public boolean pesquisou;
 	
-	public ABP(Texture quadRaiz, Texture quadDireita1, Texture quadEsquerda1, Texture quadDireita2, Texture quadEsquerda2){
+	public ABP(Texture quadRaiz, Texture quadDireita1, Texture quadEsquerda1, Texture quadDireita2, Texture quadEsquerda2,
+			Texture quadDireita3, Texture quadEsquerda3, Texture quadDireita4, Texture quadEsquerda4){
 		pesquisou = false;
 		cont = 0;
 		tent = new int[20];
@@ -127,6 +132,11 @@ public class ABP{
 		this.quadDireita1 = quadDireita1;
 		this.quadEsquerda2 = quadEsquerda2; //Vai definir o texture que ele está a esquerda do no anterior
 		this.quadDireita2 = quadDireita2;//Vai definir o texture que ele está a direita do no anterior
+		this.quadEsquerda3 = quadEsquerda3; //Vai definir o texture que ele está a esquerda do no anterior
+		this.quadDireita3 = quadDireita3;
+		this.quadEsquerda4 = quadEsquerda4; //Vai definir o texture que ele está a esquerda do no anterior
+		this.quadDireita4 = quadDireita4;
+		
 	}
 	
 	/** Verifica se a arvore está vazia */
@@ -258,14 +268,14 @@ public class ABP{
 			else if(novoNo.getProfundidade() == 2) {
 				novoNo.setQuad(quadEsquerda2);				
 				}
-			//if(novoNo.getProfundidade() == 3) {
-			//	novoNo.setQuad(quadEsquerda);
-			//	}
-			//if(novoNo.getProfundidade() == 4) {
-			//	novoNo.setQuad(quadEsquerda);
-			//	}
+			else if(novoNo.getProfundidade() == 3) {
+				novoNo.setQuad(quadEsquerda3);
+				}
+			else if(novoNo.getProfundidade() == 4) {
+				novoNo.setQuad(quadEsquerda4);
+				}
 			else{
-				novoNo.setQuad(quadRaiz);
+				novoNo.setQuad(quadEsquerda3);
 				}//Se o nó for colocado aqui, significa que ele está a esquerda
 			//Finalmente o novoNo está preparado para ser inserido na arvore
 			p.setEsq(novoNo);
@@ -286,14 +296,14 @@ public class ABP{
 			else if(novoNo.getProfundidade() == 2) {
 				novoNo.setQuad(quadDireita2);
 				}
-			//if(novoNo.getProfundidade() == 3) {
-			//	novoNo.setQuad(quadEsquerda);
-			//	}
-			//if(novoNo.getProfundidade() == 4) {
-			//	novoNo.setQuad(quadEsquerda);
-				//}
+			else if(novoNo.getProfundidade() == 3) {
+				novoNo.setQuad(quadDireita3);
+				}
+			else if(novoNo.getProfundidade() == 4) {
+				novoNo.setQuad(quadDireita4);
+				}
 			else{
-				novoNo.setQuad(quadRaiz);
+				novoNo.setQuad(quadDireita3);
 				} //Se o nó for colocado aqui, significa que ele está a direita
 			//Finalmente o novoNo está preparado para ser inserido na arvore
 			p.setDir(novoNo);

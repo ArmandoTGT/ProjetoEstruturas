@@ -64,6 +64,8 @@ public class MenuScreen implements Screen{
     BitmapFont fontABP;
     Skin skinABP;
     TextureAtlas buttonAtlasABP;
+    
+    
     private Texture fundo;
         
     public Stage stage;
@@ -101,7 +103,7 @@ public class MenuScreen implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				System.exit(0);
+				Gdx.app.exit();
 			}		    	
 		     });
 	     buttonSair.setPosition(430, 115);
@@ -142,7 +144,7 @@ public class MenuScreen implements Screen{
 				MenuScreen.this.dispose();
 			}		    	
 		     });
-	     buttonLseq.setPosition(432, 565);
+	     buttonLseq.setPosition(715, 565);
 		 stage.addActor(buttonLseq);
 		//end Botão Lseq
 		 
@@ -297,23 +299,23 @@ public class MenuScreen implements Screen{
 		//Begin Botão ABP
 		 fontABP = new BitmapFont();
 	     skinABP = new Skin();
-	     buttonAtlasABP = new TextureAtlas("botões/FilaImg.pack");
+	     buttonAtlasABP = new TextureAtlas("botões/Arvore.pack");
 	     skinABP.addRegions(buttonAtlasABP);
 	     textButtonStyleABP = new TextButtonStyle();
 	     textButtonStyleABP.font = fontABP;
-	     textButtonStyleABP.up = skinABP.getDrawable("FilaNormal");
-	     textButtonStyleABP.down = skinABP.getDrawable("FilaPressionado");
-	     textButtonStyleABP.checked = skinABP.getDrawable("FilaNormal");
+	     textButtonStyleABP.up = skinABP.getDrawable("ABPNormal");
+	     textButtonStyleABP.down = skinABP.getDrawable("ABPPressionado");
+	     textButtonStyleABP.checked = skinABP.getDrawable("ABPNormal");
 	     Button buttonABP = new TextButton(" ", textButtonStyleABP);
 	     buttonABP.addListener(new ClickListener() {	    	 
 				@Override
 			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-				textButtonStyleABP.up = skinABP.getDrawable("FilaNormal");
+				textButtonStyleABP.up = skinABP.getDrawable("ABPNormal");
 				super.exit(event, x, y, pointer, toActor);
 			}
 			@Override
 			public boolean mouseMoved(InputEvent event, float x, float y) {
-				textButtonStyleABP.up = skinABP.getDrawable("FilaSelecionado");
+				textButtonStyleABP.up = skinABP.getDrawable("ABPSelecionado");
 				return super.mouseMoved(event, x, y);
 			}
 			@Override
@@ -327,7 +329,7 @@ public class MenuScreen implements Screen{
 				MenuScreen.this.dispose();
 			}		    	
 		     });
-	     buttonABP.setPosition(0, 0);
+	     buttonABP.setPosition(150, 565);
 		 stage.addActor(buttonABP);
 		//end Botão ABP
 		
