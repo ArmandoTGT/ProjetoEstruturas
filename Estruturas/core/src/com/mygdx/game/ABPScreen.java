@@ -51,6 +51,7 @@ public class ABPScreen implements Screen{
 	static Texture quadDireita4;
 	static Texture quadEsquerda4;
 	static Texture raiz;
+	static Texture ponteiro;
 	private static int raizAux, indice, x, y, insereAux[];
 	private static NoABP no;
 	private static NoABP nos[];
@@ -91,6 +92,7 @@ public class ABPScreen implements Screen{
 		quadDireita4 = new Texture("coisa/BlocoArvoreNv4Direita.png");
 		quadEsquerda4 = new Texture("coisa/BlocoArvoreNv4Esquerda.png");
 		raiz = new Texture("coisa/PonteiroCabeça.png");
+		ponteiro = new Texture("coisa/Raiz.png");
 		FileHandle caminho = new FileHandle("coisa/font.ttf");
 		
 		  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
@@ -139,10 +141,11 @@ public class ABPScreen implements Screen{
 	
 		
 		if(exit) {
-			System.out.println("chegou");	
+			
 			this.dispose();
 			
 		}
+		game.balde.draw(ponteiro, -170, 270);
 		if(!arvore.vazia()) {
 			
 			arvore.raiz().setX(-65);
@@ -256,31 +259,31 @@ private int contaNv(int prof) {
 	private void setmoveCamera(float dt) {
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
-			camera.zoom += 0.02;
-			//if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
-		}
-		if (Gdx.input.isKeyPressed(Keys.Q)) {
-			camera.zoom -= 0.02;			
-			//if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
-		}
-		
-		
-		if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
-			camera.position.x -= 1000 * dt;			
-			//if(camera.position.x < -616.67914)camera.position.x = (float) -616.67914;
-		}
-		else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
-			camera.position.x += 1000 * dt;
-			//if(camera.position.x > 6326.621)camera.position.x = (float) 6326.621;
-		}
-		else if(Gdx.input.isKeyPressed(Keys.UP) ){
-			camera.position.y += 1000 * dt;			
-			//if(camera.position.y > 2267.0886)camera.position.y = (float) 2267.0886;
-		}
-		else if(Gdx.input.isKeyPressed(Keys.DOWN) ){
-			camera.position.y -= 1000 * dt;				
-			//if(camera.position.y < -183.99722)camera.position.y = (float) -183.99722;
-		}
+			   camera.zoom += 0.02;
+			   if(camera.zoom > 2.5)camera.zoom = (float) 2.5;
+			  }
+			  if (Gdx.input.isKeyPressed(Keys.Q)) {
+			   camera.zoom -= 0.02;   
+			   if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
+			  }
+			  
+			  
+			  if(Gdx.input.isKeyPressed(Keys.LEFT) ) {
+			   camera.position.x -= 1000 * dt;   
+			   if(camera.position.x < -1000.67914)camera.position.x = (float) -616.67914;
+			  }
+			  else if(Gdx.input.isKeyPressed(Keys.RIGHT) ){
+			   camera.position.x += 1000 * dt;   
+			   if(camera.position.x > 1000.621)camera.position.x = (float) 6326.621;
+			  }
+			  else if(Gdx.input.isKeyPressed(Keys.UP) ){
+			   camera.position.y += 1000 * dt;   
+			   if(camera.position.y > 1000.0886)camera.position.y = (float) 2267.0886;
+			  }
+			  else if(Gdx.input.isKeyPressed(Keys.DOWN) ){
+			   camera.position.y -= 1000 * dt;    
+			   if(camera.position.y < -1000.99722)camera.position.y = (float) -183.99722;
+			  }
 		
 	}
 
